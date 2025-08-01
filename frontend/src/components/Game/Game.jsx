@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Game.css';
 import puppetImage from '../../../public/puppet4.png';
-import frontImage from '../../../public/wave.png';
+import frontImage from '../../../public/wave1.png';
 
 const Game = () => {
     // Trạng thái của game

@@ -2,7 +2,7 @@
 .game-container {
     width: 100vw;
     height: 100vh;
-    background-image: url('../../../public/background_moonlight.jpg');
+    background-image: url('../../../public/background_rapmuaroi.png');
     background-size: cover;
     background-position: center;
     overflow: hidden;
@@ -113,9 +113,22 @@
 
 .front-image {
     position: absolute;
-    bottom: -175px;
+    bottom: -250px;
     left: 0;
     width: 100%;
     z-index: 10;
     pointer-events: none;
+    animation: frontWave 2s ease-in-out infinite;
+}
+
+@keyframes frontWave {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
