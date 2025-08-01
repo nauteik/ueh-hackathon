@@ -1,13 +1,17 @@
 import React from 'react'
+import './ExperienceCard.css'
 
 const ExperienceCard = ({ title, description, price, duration, borderColor, priceColor }) => {
   return (
-    <div className={`bg-white rounded-xl p-6 shadow-lg border-l-4 ${borderColor}`}>
-      <h4 className="text-xl font-semibold mb-3">{title}</h4>
-      <p className="text-gray-600 mb-4">{description}</p>
+    <div className="experience-card">
+      <div className="experience-icon">
+        🎭
+      </div>
+      <h4 className="experience-title">{title}</h4>
+      <p className="experience-description">{description}</p>
       <div className="flex justify-between items-center">
-        <span className={`text-2xl font-bold ${priceColor}`}>{price}</span>
-        <span className="text-sm text-gray-500">{duration}</span>
+        <span className="experience-price">{price}</span>
+        <span className="duration-badge">{duration}</span>
       </div>
     </div>
   )
