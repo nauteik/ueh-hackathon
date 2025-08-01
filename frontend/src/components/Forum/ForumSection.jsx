@@ -19,7 +19,9 @@ import {
   Fade,
   Grow,
   Divider,
-  Badge
+  Badge,
+  Stack,
+  InputAdornment
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import {
@@ -31,16 +33,21 @@ import {
   Search as SearchIcon,
   TrendingUp as TrendingIcon,
   AccessTime as TimeIcon,
-  Person as PersonIcon
+  Person as PersonIcon,
+  Share as ShareIcon,
+  Bookmark as BookmarkIcon,
+  Visibility as ViewIcon,
+  Star as StarIcon,
+  MoreVert as MoreVertIcon
 } from '@mui/icons-material'
 
-// Styled Components
+// Enhanced Styled Components
 const StyledSection = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  background: 'linear-gradient(135deg, #1a4d3a 0%, #0f3d2a 100%)',
+  background: 'linear-gradient(135deg, #0B4B3A 0%, #064832 50%, #0B4B3A 100%)',
   position: 'relative',
   overflow: 'hidden',
-  paddingTop: '80px',
+  paddingTop: '60px',
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -48,69 +55,163 @@ const StyledSection = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundImage: 'url("/muaroi.jpg")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    filter: 'blur(3px)',
-    opacity: 0.3,
+    backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(249, 185, 73, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(185, 28, 28, 0.06) 0%, transparent 50%)',
     zIndex: 1
-  },
-  '&::after': {
+  }
+}))
+
+// Compact Post Card
+const CompactCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(249, 185, 73, 0.2)',
+  borderRadius: '16px',
+  margin: theme.spacing(1, 0),
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  cursor: 'pointer',
+  overflow: 'hidden',
+  position: 'relative',
+  '&::before': {
     content: '""',
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'linear-gradient(135deg, rgba(26, 77, 58, 0.85) 0%, rgba(15, 61, 42, 0.9) 100%)',
-    zIndex: 2
-  }
-}))
-
-const ForumCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(15px)',
-  border: '1px solid rgba(249, 185, 73, 0.3)',
-  borderRadius: '16px',
-  padding: theme.spacing(2),
-  margin: theme.spacing(1, 0),
-  transition: 'all 0.3s ease',
-  cursor: 'pointer',
+    width: '100%',
+    height: '2px',
+    background: 'linear-gradient(90deg, transparent, #F9B949, transparent)',
+    opacity: 0,
+    transition: 'opacity 0.3s ease'
+  },
   '&:hover': {
-    transform: 'translateY(-4px)',
+    transform: 'translateY(-4px) scale(1.01)',
     borderColor: '#F9B949',
-    boxShadow: '0 12px 30px rgba(249, 185, 73, 0.2)'
+    boxShadow: '0 12px 40px rgba(249, 185, 73, 0.15), 0 0 0 1px rgba(249, 185, 73, 0.1)',
+    '&::before': {
+      opacity: 1
+    }
   }
 }))
 
 const StatsCard = styled(Paper)(({ theme }) => ({
-  background: 'linear-gradient(135deg, rgba(185, 28, 28, 0.8) 0%, rgba(139, 0, 0, 0.8) 100%)',
-  backdropFilter: 'blur(10px)',
-  border: '2px solid rgba(249, 185, 73, 0.4)',
-  borderRadius: '16px',
-  padding: theme.spacing(2),
+  background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+  backdropFilter: 'blur(20px)',
+  border: '2px solid rgba(249, 185, 73, 0.3)',
+  borderRadius: '20px',
+  padding: theme.spacing(3),
   textAlign: 'center',
-  transition: 'all 0.3s ease',
+  transition: 'all 0.4s ease',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(45deg, rgba(249, 185, 73, 0.1), transparent)',
+    opacity: 0,
+    transition: 'opacity 0.4s ease'
+  },
   '&:hover': {
-    transform: 'scale(1.05)',
-    borderColor: '#F9B949'
+    transform: 'translateY(-5px) scale(1.05)',
+    borderColor: '#F9B949',
+    boxShadow: '0 15px 40px rgba(249, 185, 73, 0.2)',
+    '&::before': {
+      opacity: 1
+    }
   }
 }))
 
 const CategoryChip = styled(Chip)(({ theme, selected }) => ({
-  margin: theme.spacing(0.5),
-  borderRadius: '20px',
+  margin: theme.spacing(0.5, 0.5, 0.5, 0),
+  borderRadius: '25px',
   background: selected 
     ? 'linear-gradient(135deg, #F9B949, #EAB308)' 
     : 'rgba(255, 255, 255, 0.1)',
   color: selected ? '#1a4d3a' : 'white',
-  border: `1px solid ${selected ? '#F9B949' : 'rgba(249, 185, 73, 0.3)'}`,
+  border: `2px solid ${selected ? '#F9B949' : 'rgba(249, 185, 73, 0.2)'}`,
+  backdropFilter: 'blur(10px)',
+  fontWeight: '600',
+  fontSize: '0.9rem',
+  height: '40px',
+  transition: 'all 0.3s ease',
   '&:hover': {
     background: selected 
       ? 'linear-gradient(135deg, #EAB308, #F9B949)' 
       : 'rgba(249, 185, 73, 0.2)',
-    borderColor: '#F9B949'
+    borderColor: '#F9B949',
+    transform: 'scale(1.05)'
+  }
+}))
+
+const SearchField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+    backdropFilter: 'blur(15px)',
+    borderRadius: '20px',
+    border: '2px solid rgba(249, 185, 73, 0.2)',
+    transition: 'all 0.3s ease',
+    '& fieldset': { 
+      border: 'none'
+    },
+    '&:hover': {
+      borderColor: 'rgba(249, 185, 73, 0.4)',
+      transform: 'translateY(-2px)'
+    },
+    '&.Mui-focused': { 
+      borderColor: '#F9B949',
+      boxShadow: '0 0 20px rgba(249, 185, 73, 0.3)'
+    }
+  },
+  '& .MuiInputBase-input': { 
+    color: 'white',
+    fontSize: '1rem',
+    '&::placeholder': {
+      color: 'rgba(255, 255, 255, 0.7)'
+    }
+  }
+}))
+
+const ActionButton = styled(Button)(({ variant = 'outlined', size = 'medium' }) => ({
+  borderRadius: size === 'small' ? '8px' : '12px',
+  textTransform: 'none',
+  fontWeight: '600',
+  padding: size === 'small' ? '4px 8px' : '8px 16px',
+  minWidth: size === 'small' ? 'auto' : '64px',
+  fontSize: size === 'small' ? '0.75rem' : '0.875rem',
+  transition: 'all 0.3s ease',
+  ...(variant === 'primary' && {
+    background: 'linear-gradient(135deg, #B91C1C 0%, #8B0000 100%)',
+    border: '2px solid #F9B949',
+    color: 'white',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 25px rgba(185, 28, 28, 0.3)'
+    }
+  }),
+  ...(variant === 'outlined' && {
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    color: 'rgba(255, 255, 255, 0.8)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    '&:hover': {
+      borderColor: '#F9B949',
+      color: '#F9B949',
+      background: 'rgba(249, 185, 73, 0.1)'
+    }
+  })
+}))
+
+const CompactIconButton = styled(IconButton)(({ theme }) => ({
+  padding: '4px',
+  color: 'rgba(255, 255, 255, 0.7)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    color: '#F9B949',
+    transform: 'scale(1.1)',
+    background: 'rgba(249, 185, 73, 0.1)'
   }
 }))
 
@@ -127,100 +228,101 @@ const ForumSection = () => {
     setIsVisible(true)
   }, [])
 
-  // Forum categories
+  // Enhanced Forum categories
   const categories = [
-    { id: 'all', label: 'Tất cả', count: 45 },
-    { id: 'general', label: 'Thảo luận chung', count: 15 },
-    { id: 'techniques', label: 'Kỹ thuật múa rối', count: 12 },
-    { id: 'history', label: 'Lịch sử & văn hóa', count: 8 },
-    { id: 'events', label: 'Sự kiện', count: 6 },
-    { id: 'qa', label: 'Hỏi đáp', count: 4 }
+    { id: 'all', label: 'Tất cả', count: 5, icon: '📋' },
+    { id: 'general', label: 'Thảo luận chung', count: 1, icon: '💬' },
+    { id: 'techniques', label: 'Kỹ thuật múa rối', count: 1, icon: '🎭' },
+    { id: 'history', label: 'Lịch sử & văn hóa', count: 1, icon: '📚' },
+    { id: 'events', label: 'Sự kiện', count: 1, icon: '🎪' },
+    { id: 'qa', label: 'Hỏi đáp', count: 1, icon: '❓' }
   ]
 
-  // Sample forum posts
+  // Enhanced forum posts with additional data
   const forumPosts = [
     {
       id: 1,
       title: 'Kỹ thuật điều khiển rối nước cơ bản cho người mới bắt đầu',
-      content: 'Xin chào mọi người! Mình là người mới tìm hiểu về nghệ thuật rối nước. Có ai có thể chia sẻ những kỹ thuật cơ bản...',
+      content: 'Xin chào mọi người! Mình là người mới tìm hiểu về nghệ thuật rối nước. Có ai có thể chia sẻ những kỹ thuật cơ bản để điều khiển con rối một cách mượt mà không?',
       author: 'Nguyễn Văn An',
-      avatar: '/logo1.png',
+      avatar: '/api/placeholder/40/40',
       category: 'techniques',
       timestamp: '2 giờ trước',
       likes: 24,
       dislikes: 1,
       comments: 8,
+      views: 156,
       isHot: true,
+      isPinned: false,
       tags: ['cơ bản', 'kỹ thuật', 'người mới']
     },
     {
       id: 2,
       title: 'Lịch sử phát triển của nghệ thuật rối nước tại các làng nghề',
-      content: 'Rối nước Việt Nam có lịch sử lâu đời và phát triển mạnh tại nhiều làng nghề. Bài viết này sẽ tìm hiểu...',
+      content: 'Rối nước Việt Nam có lịch sử lâu đời và phát triển mạnh tại nhiều làng nghề truyền thống. Bài viết này sẽ tìm hiểu về quá trình hình thành và phát triển...',
       author: 'Trần Thị Bình',
-      avatar: '/logo2.png',
+      avatar: '/api/placeholder/40/40',
       category: 'history',
       timestamp: '5 giờ trước',
       likes: 31,
       dislikes: 0,
       comments: 12,
+      views: 234,
       isHot: true,
+      isPinned: true,
       tags: ['lịch sử', 'làng nghề', 'truyền thống']
     },
     {
       id: 3,
       title: 'Sự kiện biểu diễn rối nước tại Nhà hát Thăng Long tháng này',
-      content: 'Các bạn có ai đã xem chương trình biểu diễn rối nước tại Nhà hát Thăng Long chưa? Mình nghe nói...',
+      content: 'Các bạn có ai đã xem chương trình biểu diễn rối nước tại Nhà hát Thăng Long chưa? Mình nghe nói chương trình này có nhiều tiết mục mới và rất đặc sắc.',
       author: 'Lê Minh Cường',
-      avatar: '/logo3.png',
+      avatar: '/api/placeholder/40/40',
       category: 'events',
       timestamp: '1 ngày trước',
       likes: 18,
       dislikes: 2,
       comments: 6,
+      views: 89,
       isHot: false,
+      isPinned: false,
       tags: ['sự kiện', 'biểu diễn', 'thăng long']
     },
     {
       id: 4,
-      title: 'Làm thế nào để tự chế tạo con rối nước tại nhà?',
-      content: 'Mình muốn thử làm một con rối nước đơn giản tại nhà để thực hành. Có ai biết cách làm không...',
-      author: 'Phạm Thu Hà',
-      avatar: '/logo4.585Z.png',
+      title: 'Hỏi về cách làm con rối gỗ tại nhà',
+      content: 'Mình muốn tự làm con rối gỗ để thực hành. Có ai biết loại gỗ nào phù hợp và công cụ cần thiết không?',
+      author: 'Phạm Văn Đức',
+      avatar: '/api/placeholder/40/40',
       category: 'qa',
       timestamp: '2 ngày trước',
       likes: 15,
       dislikes: 0,
       comments: 9,
+      views: 67,
       isHot: false,
-      tags: ['DIY', 'chế tạo', 'hỏi đáp']
+      isPinned: false,
+      tags: ['DIY', 'làm tay', 'gỗ']
     },
     {
       id: 5,
-      title: 'Chia sẻ kinh nghiệm học múa rối nước tại trường nghệ thuật',
-      content: 'Mình vừa hoàn thành khóa học múa rối nước 3 tháng. Muốn chia sẻ một số kinh nghiệm với mọi người...',
-      author: 'Hoàng Văn Đức',
-      avatar: '/logo5.386Z.png',
+      title: 'Workshop học múa rối nước miễn phí cuối tuần',
+      content: 'Nhà văn hóa quận 1 tổ chức workshop học múa rối nước miễn phí cho mọi lứa tuổi. Đăng ký ngay!',
+      author: 'Hoàng Thị Mai',
+      avatar: '/api/placeholder/40/40',
       category: 'general',
       timestamp: '3 ngày trước',
-      likes: 22,
+      likes: 42,
       dislikes: 1,
-      comments: 11,
-      isHot: false,
-      tags: ['kinh nghiệm', 'học tập', 'chia sẻ']
+      comments: 15,
+      views: 301,
+      isHot: true,
+      isPinned: false,
+      tags: ['workshop', 'miễn phí', 'học tập']
     }
   ]
 
-  // Forum statistics
-  const forumStats = [
-    { label: 'Thành viên', value: '1,234', icon: <PersonIcon /> },
-    { label: 'Bài viết', value: '456', icon: <CommentIcon /> },
-    { label: 'Chủ đề hot', value: '12', icon: <TrendingIcon /> },
-    { label: 'Hoạt động hôm nay', value: '89', icon: <TimeIcon /> }
-  ]
-
   const handleCreatePost = () => {
-    // Handle post creation logic here
     console.log('Creating post:', { newPostTitle, newPostContent, newPostCategory })
     setOpenNewPost(false)
     setNewPostTitle('')
@@ -237,20 +339,39 @@ const ForumSection = () => {
 
   return (
     <StyledSection>
-      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 3, py: 4 }}>
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 3, py: 6 }}>
         
-        {/* Header */}
+        {/* Enhanced Header */}
         <Fade in={isVisible} timeout={1000}>
           <Box textAlign="center" mb={6}>
+            <Box mb={2}>
+              <Chip
+                label="🎭 Cộng đồng rối nước"
+                sx={{
+                  background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.2), rgba(185, 28, 28, 0.2))',
+                  color: '#F9B949',
+                  border: '2px solid rgba(249, 185, 73, 0.4)',
+                  backdropFilter: 'blur(10px)',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  padding: '8px 16px',
+                  height: 'auto'
+                }}
+              />
+            </Box>
             <Typography
-              variant="h2"
+              variant="h1"
               component="h1"
               sx={{
                 fontSize: { xs: '2.5rem', md: '3.5rem' },
-                fontWeight: 'bold',
+                fontWeight: '900',
                 mb: 2,
+                background: 'linear-gradient(135deg, #F9B949 0%, #ffffff 25%, #B91C1C 50%, #ffffff 75%, #F9B949 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
                 fontFamily: 'Playfair Display, serif',
-                color: '#F9B949'
+                lineHeight: 1.1
               }}
             >
               Diễn đàn thảo luận
@@ -261,228 +382,336 @@ const ForumSection = () => {
                 color: 'rgba(255,255,255,0.9)',
                 maxWidth: '600px',
                 mx: 'auto',
-                lineHeight: 1.6
+                lineHeight: 1.6,
+                fontSize: { xs: '1rem', md: '1.3rem' },
+                fontWeight: 400
               }}
             >
-              Kết nối cộng đồng yêu thích nghệ thuật rối nước
+              Kết nối cộng đồng đam mê nghệ thuật rối nước Việt Nam
             </Typography>
           </Box>
         </Fade>
 
-        {/* Statistics */}
-        <Grow in={isVisible} timeout={1000}>
-          <Grid container spacing={3} mb={4}>
-            {forumStats.map((stat, index) => (
-              <Grid item xs={6} md={3} key={index}>
-                <StatsCard>
-                  <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
-                    <Avatar sx={{ bgcolor: '#F9B949', color: '#1a4d3a', mr: 1 }}>
-                      {stat.icon}
-                    </Avatar>
-                  </Box>
-                  <Typography variant="h4" sx={{ color: '#F9B949', fontWeight: 'bold' }}>
-                    {stat.value}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'white', opacity: 0.9 }}>
-                    {stat.label}
-                  </Typography>
-                </StatsCard>
-              </Grid>
-            ))}
-          </Grid>
-        </Grow>
-
-        <Grid container spacing={4}>
-          {/* Sidebar */}
+        <Grid container spacing={3}>
+          {/* Enhanced Sidebar */}
           <Grid item xs={12} md={3}>
             <Grow in={isVisible} timeout={1200}>
               <Box>
-                {/* New Post Button */}
-                <Button
-                  variant="contained"
+                {/* Enhanced New Post Button */}
+                <ActionButton
+                  variant="primary"
                   fullWidth
                   startIcon={<AddIcon />}
                   onClick={() => setOpenNewPost(true)}
                   sx={{
                     mb: 3,
                     py: 2,
-                    background: 'linear-gradient(135deg, #B91C1C 0%, #8B0000 100%)',
-                    border: '2px solid #F9B949',
-                    borderRadius: '12px',
-                    fontSize: '1.1rem',
-                    fontWeight: 'bold',
-                    '&:hover': {
-                      background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
-                      transform: 'scale(1.02)'
-                    }
+                    fontSize: '1rem',
+                    fontWeight: 'bold'
                   }}
                 >
                   Tạo bài viết mới
-                </Button>
+                </ActionButton>
 
-                {/* Search */}
-                <TextField
+                {/* Enhanced Search */}
+                <SearchField
                   fullWidth
                   placeholder="Tìm kiếm bài viết..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   InputProps={{
-                    startAdornment: <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)', mr: 1 }} />
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: 'rgba(255,255,255,0.7)' }} />
+                      </InputAdornment>
+                    )
                   }}
-                  sx={{
-                    mb: 3,
-                    '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '12px',
-                      '& fieldset': { borderColor: 'rgba(249, 185, 73, 0.3)' },
-                      '&:hover fieldset': { borderColor: '#F9B949' },
-                      '&.Mui-focused fieldset': { borderColor: '#F9B949' }
-                    },
-                    '& .MuiInputBase-input': { color: 'white' }
-                  }}
+                  sx={{ mb: 3 }}
                 />
 
-                {/* Categories */}
+                {/* Enhanced Categories */}
                 <Paper
                   sx={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(249, 185, 73, 0.3)',
-                    borderRadius: '16px',
-                    p: 2
+                    background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+                    backdropFilter: 'blur(20px)',
+                    border: '2px solid rgba(249, 185, 73, 0.2)',
+                    borderRadius: '20px',
+                    p: 2.5,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '2px',
+                      background: 'linear-gradient(90deg, transparent, #F9B949, transparent)'
+                    }
                   }}
                 >
-                  <Typography variant="h6" sx={{ color: '#F9B949', mb: 2, fontWeight: 'bold' }}>
-                    Danh mục
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      color: '#F9B949', 
+                      mb: 2, 
+                      fontWeight: '800',
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1
+                    }}
+                  >
+                    📂 Danh mục
                   </Typography>
-                  {categories.map((category) => (
-                    <CategoryChip
-                      key={category.id}
-                      label={`${category.label} (${category.count})`}
-                      selected={selectedCategory === category.id}
-                      onClick={() => setSelectedCategory(category.id)}
-                      sx={{ width: '100%', mb: 1, justifyContent: 'space-between' }}
-                    />
-                  ))}
+                  <Stack spacing={0.5}>
+                    {categories.map((category) => (
+                      <CategoryChip
+                        key={category.id}
+                        label={
+                          <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                            <Box display="flex" alignItems="center" gap={1}>
+                              <span>{category.icon}</span>
+                              <span>{category.label}</span>
+                            </Box>
+                            <Chip 
+                              label={category.count} 
+                              size="small"
+                              sx={{ 
+                                bgcolor: 'rgba(255,255,255,0.2)', 
+                                color: 'inherit',
+                                minWidth: '20px',
+                                height: '18px',
+                                '& .MuiChip-label': { fontSize: '0.65rem', px: 0.5 }
+                              }}
+                            />
+                          </Box>
+                        }
+                        selected={selectedCategory === category.id}
+                        onClick={() => setSelectedCategory(category.id)}
+                        sx={{ width: '100%', justifyContent: 'space-between', height: '40px' }}
+                      />
+                    ))}
+                  </Stack>
                 </Paper>
               </Box>
             </Grow>
           </Grid>
 
-          {/* Main Content */}
+          {/* Enhanced Main Content */}
           <Grid item xs={12} md={9}>
             <Grow in={isVisible} timeout={1400}>
               <Box>
+                {/* Results header */}
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Typography variant="h6" sx={{ color: 'white', fontWeight: '600', fontSize: '1.1rem' }}>
+                    {filteredPosts.length} bài viết
+                  </Typography>
+                  <Box display="flex" gap={1}>
+                    <ActionButton variant="outlined" size="small">
+                      Mới nhất
+                    </ActionButton>
+                    <ActionButton variant="outlined" size="small">
+                      Phổ biến
+                    </ActionButton>
+                  </Box>
+                </Box>
+
+                {/* Compact Post Cards */}
                 {filteredPosts.map((post, index) => (
-                  <ForumCard key={post.id}>
-                    <CardContent>
+                  <CompactCard key={post.id}>
+                    <CardContent sx={{ p: 2.5 }}>
+                      {/* Compact Post Header */}
                       <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-                        <Box display="flex" alignItems="center" gap={2}>
-                          <Avatar src={post.avatar} sx={{ width: 48, height: 48 }} />
+                        <Box display="flex" alignItems="center" gap={1.5}>
+                          <Avatar 
+                            src={post.avatar} 
+                            sx={{ 
+                              width: 40, 
+                              height: 40,
+                              border: '2px solid rgba(249, 185, 73, 0.3)',
+                              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                            }} 
+                          />
                           <Box>
-                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+                            <Typography 
+                              variant="subtitle1" 
+                              sx={{ 
+                                color: 'white', 
+                                fontWeight: '600',
+                                fontSize: '1rem',
+                                lineHeight: 1.2
+                              }}
+                            >
                               {post.author}
                             </Typography>
-                            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                            <Typography 
+                              variant="body2" 
+                              sx={{ 
+                                color: 'rgba(255,255,255,0.6)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                fontSize: '0.8rem'
+                              }}
+                            >
+                              <TimeIcon sx={{ fontSize: '12px' }} />
                               {post.timestamp}
                             </Typography>
                           </Box>
                         </Box>
-                        {post.isHot && (
-                          <Chip
-                            label="HOT"
-                            size="small"
-                            sx={{
-                              background: 'linear-gradient(135deg, #F9B949, #EAB308)',
-                              color: '#1a4d3a',
-                              fontWeight: 'bold'
-                            }}
-                          />
-                        )}
+                        <Box display="flex" gap={0.5} alignItems="center">
+                          {post.isPinned && (
+                            <Chip
+                              label="📌"
+                              size="small"
+                              sx={{
+                                background: 'linear-gradient(135deg, #10B981, #059669)',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                height: '20px',
+                                minWidth: '30px',
+                                '& .MuiChip-label': { px: 0.5, fontSize: '0.7rem' }
+                              }}
+                            />
+                          )}
+                          {post.isHot && (
+                            <Chip
+                              label="🔥"
+                              size="small"
+                              sx={{
+                                background: 'linear-gradient(135deg, #F9B949, #EAB308)',
+                                color: '#1a4d3a',
+                                fontWeight: 'bold',
+                                height: '20px',
+                                minWidth: '30px',
+                                '& .MuiChip-label': { px: 0.5, fontSize: '0.7rem' }
+                              }}
+                            />
+                          )}
+                          <CompactIconButton size="small">
+                            <MoreVertIcon sx={{ fontSize: '16px' }} />
+                          </CompactIconButton>
+                        </Box>
                       </Box>
 
+                      {/* Compact Post Title */}
                       <Typography
-                        variant="h5"
+                        variant="h6"
                         sx={{
                           color: '#F9B949',
-                          fontWeight: 'bold',
-                          mb: 2,
+                          fontWeight: '700',
+                          mb: 1.5,
                           cursor: 'pointer',
-                          '&:hover': { textDecoration: 'underline' }
+                          lineHeight: 1.3,
+                          fontSize: '1.1rem',
+                          transition: 'all 0.3s ease',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          '&:hover': { 
+                            textDecoration: 'underline',
+                            color: '#FCD34D'
+                          }
                         }}
                       >
                         {post.title}
                       </Typography>
 
+                      {/* Compact Post Content */}
                       <Typography
-                        variant="body1"
+                        variant="body2"
                         sx={{
-                          color: 'rgba(255,255,255,0.9)',
+                          color: 'rgba(255,255,255,0.8)',
                           mb: 2,
-                          lineHeight: 1.6
+                          lineHeight: 1.5,
+                          fontSize: '0.9rem',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
                         }}
                       >
                         {post.content}
                       </Typography>
 
-                      {/* Tags */}
+                      {/* Compact Tags */}
                       <Box mb={2}>
-                        {post.tags.map((tag, tagIndex) => (
+                        {post.tags.slice(0, 3).map((tag, tagIndex) => (
                           <Chip
                             key={tagIndex}
                             label={`#${tag}`}
                             size="small"
                             sx={{
-                              mr: 1,
-                              mb: 1,
-                              background: 'rgba(185, 28, 28, 0.3)',
-                              color: 'white',
-                              border: '1px solid rgba(249, 185, 73, 0.3)'
+                              mr: 0.5,
+                              mb: 0.5,
+                              background: 'rgba(185, 28, 28, 0.2)',
+                              color: '#F9B949',
+                              border: '1px solid rgba(249, 185, 73, 0.3)',
+                              backdropFilter: 'blur(10px)',
+                              fontWeight: '500',
+                              fontSize: '0.7rem',
+                              height: '22px',
+                              '&:hover': {
+                                background: 'rgba(249, 185, 73, 0.2)',
+                                transform: 'scale(1.05)'
+                              }
                             }}
                           />
                         ))}
                       </Box>
 
-                      <Divider sx={{ bgcolor: 'rgba(249, 185, 73, 0.3)', mb: 2 }} />
-
-                      {/* Actions */}
+                      {/* Compact Actions */}
                       <Box display="flex" justifyContent="space-between" alignItems="center">
-                        <Box display="flex" gap={2}>
-                          <Button
-                            startIcon={<ThumbUpIcon />}
-                            sx={{ color: 'rgba(255,255,255,0.8)' }}
+                        <Box display="flex" gap={0.5}>
+                          <ActionButton
+                            variant="outlined"
+                            startIcon={<ThumbUpIcon sx={{ fontSize: '14px' }} />}
+                            size="small"
                           >
                             {post.likes}
-                          </Button>
-                          <Button
-                            startIcon={<ThumbDownIcon />}
-                            sx={{ color: 'rgba(255,255,255,0.8)' }}
+                          </ActionButton>
+                          <ActionButton
+                            variant="outlined"
+                            startIcon={<CommentIcon sx={{ fontSize: '14px' }} />}
+                            size="small"
                           >
-                            {post.dislikes}
-                          </Button>
-                          <Button
-                            startIcon={<CommentIcon />}
-                            sx={{ color: 'rgba(255,255,255,0.8)' }}
+                            {post.comments}
+                          </ActionButton>
+                          <ActionButton
+                            variant="outlined"
+                            startIcon={<ViewIcon sx={{ fontSize: '14px' }} />}
+                            size="small"
                           >
-                            {post.comments} bình luận
-                          </Button>
+                            {post.views}
+                          </ActionButton>
                         </Box>
-                        <Button
-                          startIcon={<ReplyIcon />}
-                          sx={{ color: '#F9B949' }}
-                        >
-                          Trả lời
-                        </Button>
+                        <Box display="flex" gap={0.5} alignItems="center">
+                          <CompactIconButton size="small">
+                            <BookmarkIcon sx={{ fontSize: '16px' }} />
+                          </CompactIconButton>
+                          <CompactIconButton size="small">
+                            <ShareIcon sx={{ fontSize: '16px' }} />
+                          </CompactIconButton>
+                          <ActionButton
+                            startIcon={<ReplyIcon sx={{ fontSize: '14px' }} />}
+                            size="small"
+                            sx={{ color: '#F9B949', fontSize: '0.75rem' }}
+                          >
+                            Trả lời
+                          </ActionButton>
+                        </Box>
                       </Box>
                     </CardContent>
-                  </ForumCard>
+                  </CompactCard>
                 ))}
               </Box>
             </Grow>
           </Grid>
         </Grid>
 
-        {/* New Post Dialog */}
+        {/* Enhanced New Post Dialog */}
         <Dialog
           open={openNewPost}
           onClose={() => setOpenNewPost(false)}
@@ -490,36 +719,48 @@ const ForumSection = () => {
           fullWidth
           PaperProps={{
             sx: {
-              background: 'linear-gradient(135deg, #1a4d3a 0%, #0f3d2a 100%)',
+              background: 'linear-gradient(145deg, rgba(11, 75, 58, 0.95), rgba(6, 72, 50, 0.95))',
+              backdropFilter: 'blur(20px)',
               border: '2px solid #F9B949',
-              borderRadius: '16px'
+              borderRadius: '24px',
+              boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
             }
           }}
         >
-          <DialogTitle sx={{ color: '#F9B949', fontWeight: 'bold', fontSize: '1.5rem' }}>
-            Tạo bài viết mới
+          <DialogTitle 
+            sx={{ 
+              color: '#F9B949', 
+              fontWeight: '800', 
+              fontSize: '1.5rem',
+              textAlign: 'center',
+              pb: 1
+            }}
+          >
+            ✍️ Tạo bài viết mới
           </DialogTitle>
-          <DialogContent>
+          <DialogContent sx={{ px: 3 }}>
             <TextField
               fullWidth
-              label="Tiêu đề"
+              label="Tiêu đề bài viết"
               value={newPostTitle}
               onChange={(e) => setNewPostTitle(e.target.value)}
               margin="normal"
               sx={{
                 '& .MuiOutlinedInput-root': {
                   background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '16px',
                   '& fieldset': { borderColor: 'rgba(249, 185, 73, 0.3)' },
                   '&:hover fieldset': { borderColor: '#F9B949' },
                   '&.Mui-focused fieldset': { borderColor: '#F9B949' }
                 },
-                '& .MuiInputBase-input': { color: 'white' },
+                '& .MuiInputBase-input': { color: 'white', fontSize: '1rem' },
                 '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' }
               }}
             />
             <TextField
               fullWidth
-              label="Nội dung"
+              label="Nội dung bài viết"
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
               margin="normal"
@@ -528,35 +769,31 @@ const ForumSection = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '16px',
                   '& fieldset': { borderColor: 'rgba(249, 185, 73, 0.3)' },
                   '&:hover fieldset': { borderColor: '#F9B949' },
                   '&.Mui-focused fieldset': { borderColor: '#F9B949' }
                 },
-                '& .MuiInputBase-input': { color: 'white' },
+                '& .MuiInputBase-input': { color: 'white', fontSize: '0.95rem' },
                 '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' }
               }}
             />
           </DialogContent>
-          <DialogActions sx={{ p: 3 }}>
-            <Button
+          <DialogActions sx={{ p: 3, pt: 1 }}>
+            <ActionButton
               onClick={() => setOpenNewPost(false)}
-              sx={{ color: 'rgba(255,255,255,0.7)' }}
+              variant="outlined"
             >
-              Hủy
-            </Button>
-            <Button
+              Hủy bỏ
+            </ActionButton>
+            <ActionButton
               onClick={handleCreatePost}
-              variant="contained"
-              sx={{
-                background: 'linear-gradient(135deg, #B91C1C 0%, #8B0000 100%)',
-                border: '1px solid #F9B949',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)'
-                }
-              }}
+              variant="primary"
+              startIcon={<AddIcon />}
             >
-              Đăng bài
-            </Button>
+              Đăng bài viết
+            </ActionButton>
           </DialogActions>
         </Dialog>
 

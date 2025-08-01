@@ -6,13 +6,68 @@ const BookingForm = () => {
     name: '',
     email: '',
     phone: '',
+    city: '',
+    theater: '',
     experience: 'show',
-    date: ''
+    date: '',
+    time: ''
   })
 
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState('')
+
+  // Dữ liệu thành phố và rạp
+  const citiesAndTheaters = {
+    'hanoi': {
+      name: 'Hà Nội',
+      theaters: [
+        { id: 'thang-long', name: 'Nhà hát Rối nước Thăng Long' },
+        { id: 'kim-dong', name: 'Nhà hát Rối nước Kim Đồng' },
+        { id: 'hong-ha', name: 'Trung tâm Văn hóa Hồng Hà' },
+        { id: 'temple-literature', name: 'Văn Miếu - Quốc Tử Giám' }
+      ]
+    },
+    'hcm': {
+      name: 'TP. Hồ Chí Minh',
+      theaters: [
+        { id: 'golden-dragon', name: 'Nhà hát Rối nước Rồng Vàng' },
+        { id: 'saigon-opera', name: 'Nhà hát Thành phố' },
+        { id: 'history-museum', name: 'Bảo tàng Lịch sử TP.HCM' },
+        { id: 'ben-thanh', name: 'Trung tâm Văn hóa Bến Thành' }
+      ]
+    },
+    'hue': {
+      name: 'Huế',
+      theaters: [
+        { id: 'hue-royal', name: 'Nhà hát Hoàng Gia Huế' },
+        { id: 'perfume-river', name: 'Sân khấu Sông Hương' },
+        { id: 'imperial-city', name: 'Hoàng Thành Huế' }
+      ]
+    },
+    'danang': {
+      name: 'Đà Nẵng',
+      theaters: [
+        { id: 'danang-opera', name: 'Nhà hát Trung Vương' },
+        { id: 'han-market', name: 'Trung tâm Văn hóa Chợ Hàn' },
+        { id: 'dragon-bridge', name: 'Khu vực Cầu Rồng' }
+      ]
+    },
+    'cantho': {
+      name: 'Cần Thơ',
+      theaters: [
+        { id: 'cantho-theater', name: 'Nhà hát Cần Thơ' },
+        { id: 'mekong-cultural', name: 'Trung tâm Văn hóa Mekong' },
+        { id: 'ninh-kieu', name: 'Bến Ninh Kiều' }
+      ]
+    }
+  }
+
+  // Danh sách thời gian biểu diễn
+  const showTimes = [
+    { value: '14:00', label: '14:00 - Buổi chiều', icon: '🌅' },
+    { value: '20:00', label: '20:00 - Buổi tối', icon: '🌙' }
+  ]
 
   const validateForm = () => {
     const newErrors = {}
@@ -33,6 +88,14 @@ const BookingForm = () => {
       newErrors.phone = 'Số điện thoại không hợp lệ'
     }
 
+    if (!formData.city) {
+      newErrors.city = 'Vui lòng chọn thành phố'
+    }
+
+    if (!formData.theater) {
+      newErrors.theater = 'Vui lòng chọn địa điểm'
+    }
+
     if (!formData.date) {
       newErrors.date = 'Vui lòng chọn ngày'
     } else {
@@ -44,22 +107,44 @@ const BookingForm = () => {
       }
     }
 
+    if (!formData.time) {
+      newErrors.time = 'Vui lòng chọn thời gian'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    
+    // Nếu thay đổi thành phố, reset theater
+    if (name === 'city') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        theater: '' // Reset theater khi đổi city
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
 
-    // Clear error when user starts typing
+    // Clear error when user starts typing/selecting
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
         [name]: ''
+      }))
+    }
+
+    // Clear theater error when city changes
+    if (name === 'city' && errors.theater) {
+      setErrors(prev => ({
+        ...prev,
+        theater: ''
       }))
     }
   }
@@ -87,8 +172,11 @@ const BookingForm = () => {
           name: '',
           email: '',
           phone: '',
+          city: '',
+          theater: '',
           experience: 'show',
-          date: ''
+          date: '',
+          time: ''
         })
         setSubmitStatus('')
       }, 3000)
@@ -130,12 +218,20 @@ const BookingForm = () => {
     return 'Đặt lịch ngay'
   }
 
+  // Get available theaters based on selected city
+  const getAvailableTheaters = () => {
+    if (!formData.city || !citiesAndTheaters[formData.city]) {
+      return []
+    }
+    return citiesAndTheaters[formData.city].theaters
+  }
+
   return (
     <div className="booking-form">
       <h3>Đặt lịch ngay</h3>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="booking-label block text-sm font-medium text-gray-700 mb-2">Họ và tên</label>
+          <label className="booking-label">Họ và tên</label>
           <input 
             type="text" 
             name="name"
@@ -149,7 +245,7 @@ const BookingForm = () => {
         </div>
         
         <div>
-          <label className="booking-label block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <label className="booking-label">Email</label>
           <input 
             type="email" 
             name="email"
@@ -163,7 +259,7 @@ const BookingForm = () => {
         </div>
         
         <div>
-          <label className="booking-label block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+          <label className="booking-label">Số điện thoại</label>
           <input 
             type="tel" 
             name="phone"
@@ -175,6 +271,47 @@ const BookingForm = () => {
           />
           {errors.phone && <div className="error-message">{errors.phone}</div>}
         </div>
+
+        <div>
+          <label className="booking-label">Thành phố</label>
+          <select 
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
+            className={getInputClassName('city')}
+            required
+          >
+            <option value="" className="bg-[#0B4B3A] text-white">Chọn thành phố</option>
+            {Object.entries(citiesAndTheaters).map(([key, cityData]) => (
+              <option key={key} value={key} className="bg-[#0B4B3A] text-white">
+                🏙️ {cityData.name}
+              </option>
+            ))}
+          </select>
+          {errors.city && <div className="error-message">{errors.city}</div>}
+        </div>
+
+        <div>
+          <label className="booking-label">Địa điểm biểu diễn</label>
+          <select 
+            name="theater"
+            value={formData.theater}
+            onChange={handleInputChange}
+            className={getInputClassName('theater')}
+            disabled={!formData.city}
+            required
+          >
+            <option value="" className="bg-[#0B4B3A] text-white">
+              {!formData.city ? 'Vui lòng chọn thành phố trước' : 'Chọn địa điểm'}
+            </option>
+            {getAvailableTheaters().map((theater) => (
+              <option key={theater.id} value={theater.id} className="bg-[#0B4B3A] text-white">
+                🎭 {theater.name}
+              </option>
+            ))}
+          </select>
+          {errors.theater && <div className="error-message">{errors.theater}</div>}
+        </div>
         
         <div>
           <label className="booking-label">Loại trải nghiệm</label>
@@ -184,14 +321,13 @@ const BookingForm = () => {
             onChange={handleInputChange}
             className="booking-input"
           >
-            <option value="show" className="bg-[#0B4B3A] text-white">Biểu diễn rối nước (60 phút)</option>
-            <option value="workshop" className="bg-[#0B4B3A] text-white">Workshop học múa rối (120 phút)</option>
-            <option value="vip" className="bg-[#0B4B3A] text-white">Trải nghiệm VIP (180 phút)</option>
+            <option value="show" className="bg-[#0B4B3A] text-white">🎪 Biểu diễn rối nước (60 phút)</option>
+            <option value="workshop" className="bg-[#0B4B3A] text-white">🛠️ Workshop học múa rối (120 phút)</option>
           </select>
         </div>
         
         <div>
-          <label className="booking-label block text-sm font-medium text-gray-700 mb-2">Ngày mong muốn</label>
+          <label className="booking-label">Ngày mong muốn</label>
           <input 
             type="date" 
             name="date"
@@ -203,6 +339,31 @@ const BookingForm = () => {
           />
           {errors.date && <div className="error-message">{errors.date}</div>}
         </div>
+
+        <div>
+          <label className="booking-label">Thời gian biểu diễn</label>
+          <select 
+            name="time"
+            value={formData.time}
+            onChange={handleInputChange}
+            className={getInputClassName('time')}
+            required
+          >
+            <option value="" className="bg-[#0B4B3A] text-white">
+              Chọn thời gian
+            </option>
+            {showTimes.map((timeSlot) => (
+              <option 
+                key={timeSlot.value} 
+                value={timeSlot.value} 
+                className="bg-[#0B4B3A] text-white"
+              >
+                {timeSlot.icon} {timeSlot.label}
+              </option>
+            ))}
+          </select>
+          {errors.time && <div className="error-message">{errors.time}</div>}
+        </div>
         
         <button 
           type="submit"
@@ -212,9 +373,15 @@ const BookingForm = () => {
           {getSubmitButtonText()}
         </button>
         
+        {submitStatus === 'success' && (
+          <div className="success-message text-center">
+            🎉 Đặt lịch thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.
+          </div>
+        )}
+        
         {submitStatus === 'error' && (
           <div className="error-message text-center">
-            Có lỗi xảy ra. Vui lòng thử lại!
+            ❌ Có lỗi xảy ra. Vui lòng thử lại!
           </div>
         )}
       </form>
