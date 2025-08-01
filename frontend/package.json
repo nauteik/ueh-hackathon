@@ -1,0 +1,45 @@
+{
+  "name": "threejs-3d-project",
+  "version": "1.0.0",
+  "description": "3D Web Project using Three.js",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.6.1",
+    "@react-three/fiber": "^9.3.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "@vitejs/plugin-react": "^4.7.0",
+    "framer-motion": "^12.23.12",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.7.1",
+    "three": "^0.159.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "vite": "^5.4.19"
+  },
+  "keywords": [
+    "threejs",
+    "3d",
+    "webgl",
+    "javascript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nauteik/ueh-hackathon.git"
+  },
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/nauteik/ueh-hackathon/issues"
+  },
+  "homepage": "https://github.com/nauteik/ueh-hackathon#readme"
+}
