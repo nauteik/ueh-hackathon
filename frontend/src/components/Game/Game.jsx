@@ -5,14 +5,72 @@ import puppetImage from '../../../public/puppet4.png';
 import frontImage from '../../../public/wave1.png';
 
 const Game = () => {
-    // Trạng thái của game
+    // Thêm hằng số vào đầu component
+    const INITIAL_SPEED = 0.1;  // Tốc độ ban đầu
+    const SPEED_INCREMENT = 0.05; // Tốc độ tăng mỗi giây
+
+    // Thêm các state và ref mới để quản lý tốc độ
     const [rotation, setRotation] = useState(0);
-    const [speed, setSpeed] = useState(0.1); // Tốc độ quay hiện tại
+    const [speed, setSpeed] = useState(0.5);
     const [time, setTime] = useState(0);
     const startTimeRef = useRef(null);
     const [isGameOver, setIsGameOver] = useState(false);
     const [isStarted, setIsStarted] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [showVoucher, setShowVoucher] = useState(null);
+    const [earnedVouchers, setEarnedVouchers] = useState([]);
+    const [countdown, setCountdown] = useState(null);
+    const lastSpeedRef = useRef(0.5); // Thêm ref mới để lưu tốc độ
+    const pausedTimeRef = useRef(0);
+    const gameStageRef = useRef(0);
+    const [isInitialPosition, setIsInitialPosition] = useState(true);
+
+    const startCountdown = (isResume = false) => {
+        setIsPaused(true); // Pause game during countdown
+        setCountdown(3);
+        let timeAtPause = time; // Store current time
+
+        const countInterval = setInterval(() => {
+            setCountdown(prev => {
+                if (prev <= 1) {
+                    clearInterval(countInterval);
+                    setCountdown(null);
+                    setIsPaused(false);
+                    
+                    if (isResume) {
+                        // For resume: keep the stored time
+                        startTimeRef.current = performance.now() - (timeAtPause * 1000);
+                    } else {
+                        // For new game: reset time and start game
+                        setTime(0);
+                        setIsStarted(true); // Thêm dòng này
+                        startTimeRef.current = performance.now();
+                        // Bắt đầu xoay sau khi đếm ngược
+                        setTimeout(() => {
+                            setIsInitialPosition(false);
+                            rotationDirection.current = Math.random() < 0.5 ? 1 : -1;
+                        }, 500); // Đợi 0.5 giây sau khi đếm ngược kết thúc
+                    }
+                    return null;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    };
+
+    const handleStart = () => {
+        setIsGameOver(false);
+        setTime(0);
+        setRotation(0);
+        setSpeed(0.5); // Tốc độ khởi đầu
+        setEarnedVouchers([]);
+        setShowVoucher(null);
+        startTimeRef.current = null;
+        pausedTimeRef.current = 0;
+        gameStageRef.current = 0;
+        setIsInitialPosition(true); // Đặt vị trí ban đầu
+        startCountdown(false);
+    };
 
     // Dùng ref để lưu hướng quay hiện tại (1 là quay sang phải, -1 là quay sang trái)
     const rotationDirection = useRef(1); // Bắt đầu quay sang phải
@@ -20,20 +78,48 @@ const Game = () => {
 
     // Vòng lặp chính của game
     const gameLoop = (timestamp) => {
-        if (isGameOver || !isStarted || isPaused) {
-            return; // Không tiếp tục vòng lặp khi pause
+        if (isGameOver || !isStarted || isPaused || countdown || isInitialPosition) {
+            return;
         }
 
-        // Cập nhật thời gian thực từ lúc bắt đầu
         if (startTimeRef.current === null) {
             startTimeRef.current = timestamp;
         }
-        const elapsedTime = (timestamp - startTimeRef.current) / 1000; // Chuyển đổi từ milliseconds sang seconds
-        setTime(elapsedTime);
 
-        // Cập nhật góc quay dựa trên hướng và tốc độ
+        const elapsedTime = (timestamp - startTimeRef.current) / 1000;
+        
+        // Tính toán tốc độ tăng tuyến tính
+        const currentSpeed = INITIAL_SPEED + (elapsedTime * SPEED_INCREMENT);
+
+        if (!countdown) {
+            setSpeed(currentSpeed);
+            lastSpeedRef.current = currentSpeed;
+        }
+
+        if (!isPaused && !countdown) {
+            setTime(elapsedTime);
+
+            // Kiểm tra mốc thời gian để tặng voucher
+            if (elapsedTime >= 20 && !earnedVouchers.includes(20)) {
+                setEarnedVouchers(prev => [...prev, 20]);
+                setShowVoucher({ value: 5000, time: 20 });
+                setTimeout(() => setShowVoucher(null), 2000);
+            }
+            if (elapsedTime >= 40 && !earnedVouchers.includes(40)) {
+                setEarnedVouchers(prev => [...prev, 40]);
+                setShowVoucher({ value: 10000, time: 40 });
+                setTimeout(() => setShowVoucher(null), 2000);
+            }
+            if (elapsedTime >= 60 && !earnedVouchers.includes(60)) {
+                setEarnedVouchers(prev => [...prev, 60]);
+                setShowVoucher({ value: 15000, time: 60 });
+                setTimeout(() => setShowVoucher(null), 2000);
+            }
+        }
+
         setRotation(prevRotation => {
-            const newRotation = prevRotation + rotationDirection.current * speed;
+            // Sử dụng currentSpeed thay vì speed để đảm bảo tốc độ được cập nhật đúng
+            const newRotation = prevRotation + rotationDirection.current * currentSpeed;
             if (Math.abs(newRotation) >= 90) {
                 setIsGameOver(true);
                 return prevRotation;
@@ -41,28 +127,25 @@ const Game = () => {
             return newRotation;
         });
 
-        // Tăng tốc độ quay theo thời gian để tăng độ khó
-        setSpeed(prevSpeed => prevSpeed + 0.00075);
-
         requestRef.current = requestAnimationFrame(gameLoop);
     };
 
     // Sửa lại useEffect để handle pause
     useEffect(() => {
-        if (isStarted && !isGameOver && !isPaused) {
+        if (isStarted && !isGameOver && !isPaused && !countdown && !isInitialPosition) {
             requestRef.current = requestAnimationFrame(gameLoop);
         }
         return () => cancelAnimationFrame(requestRef.current);
-    }, [isStarted, isGameOver, isPaused, speed]); // Thêm isPaused vào dependencies
+    }, [isStarted, isGameOver, isPaused, countdown, isInitialPosition]); // Add countdown to dependencies
 
     // useEffect để xử lý điều khiển bằng chuột và cảm ứng
     useEffect(() => {
         const handleInteraction = (event) => {
-            if (isGameOver || !isStarted) return;
+            if (isGameOver || !isStarted || countdown) return; // Thêm kiểm tra countdown
 
             // Lấy tọa độ X của điểm chạm/click
             const clickX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
-            
+
             // Lấy vị trí của con rối trên màn hình (để làm mốc)
             const puppetElement = document.getElementById('puppet-container');
             if (!puppetElement) return;
@@ -72,7 +155,7 @@ const Game = () => {
             // Yêu cầu: Bấm bên trái con rối -> quay sang phải, và ngược lại
             if (clickX < puppetCenterX) {
                 // Click/chạm vào bên trái con rối -> đổi hướng quay sang phải
-                rotationDirection.current = 1; 
+                rotationDirection.current = 1;
             } else {
                 // Click/chạm vào bên phải con rối -> đổi hướng quay sang trái
                 rotationDirection.current = -1;
@@ -88,36 +171,53 @@ const Game = () => {
             window.removeEventListener('mousedown', handleInteraction);
             window.removeEventListener('touchstart', handleInteraction);
         };
-    }, [isStarted, isGameOver]); // Chỉ phụ thuộc vào trạng thái game
+    }, [isStarted, isGameOver, countdown]); // Thêm countdown vào dependencies
 
     const startGame = () => {
-        setIsStarted(true);
-        setIsGameOver(false);
-        setIsPaused(false); // Reset pause state
-        setRotation(0);
-        setTime(0);
-        setSpeed(0.1);
-        startTimeRef.current = null;
-        rotationDirection.current = Math.random() < 0.5 ? 1 : -1;
+        handleStart();
     };
 
     const togglePause = () => {
         setIsPaused(prev => {
             const newPauseState = !prev;
-            if (!newPauseState) {
-                // Khi unpause, reset startTimeRef để tính lại thời gian
-                startTimeRef.current = null;
+            if (newPauseState) {
+                // Lưu tốc độ và thời điểm tạm dừng
+                lastSpeedRef.current = speed;
+                pausedTimeRef.current = performance.now();
             }
             return newPauseState;
         });
     };
 
+    const handleResume = () => {
+        // Điều chỉnh startTimeRef để duy trì thời gian chơi chính xác
+        const pauseDuration = (performance.now() - pausedTimeRef.current) / 1000;
+        startTimeRef.current += pauseDuration * 1000;
+        startCountdown(true);
+    };
+
+    const handleHome = () => {
+        // Xử lý quay về trang chủ (có thể là điều hướng đến một route khác)
+        console.log('Về trang chủ');
+    };
+
     return (
         <div className="game-container">
+            {/* Thêm countdown vào đây, trước các component khác */}
+            {countdown && (
+                <div className="countdown">
+                    {countdown}
+                </div>
+            )}
+            {showVoucher && (
+                <div className="voucher-notification">
+                    Chúc mừng! Bạn nhận được voucher {showVoucher.value.toLocaleString()}đ
+                </div>
+            )}
             <div className="game-ui">
-                <p>Thời gian: {time.toFixed(1)}s</p>
-                {isStarted && !isGameOver && (
-                    <button 
+                {!countdown && <p>Thời gian: {time.toFixed(1)}s</p>}
+                {isStarted && !isGameOver && !countdown && ( // Thêm điều kiện !countdown
+                    <button
                         className="pause-button"
                         onClick={togglePause}
                     >
@@ -126,25 +226,26 @@ const Game = () => {
                 )}
             </div>
 
-            <div 
+            <div
                 id="puppet-container"
-                className="puppet-container" 
-                style={{ 
+                className="puppet-container"
+                style={{
                     transform: `translateX(-50%) rotate(${rotation}deg)`,
-                    bottom: isStarted ? '25%' : '-100%', 
+                    bottom: isStarted ? '25%' : '-100%',
                 }}
             >
+
                 <img src={puppetImage} alt="Water Puppet" className="puppet-image" />
             </div>
 
             {/* Add frontImage on top */}
-            <img 
-                src={frontImage} 
-                alt="Wave" 
+            <img
+                src={frontImage}
+                alt="Wave"
                 className="front-image"
             />
 
-            {(!isStarted || isGameOver) && (
+            {(!isStarted || isGameOver) && !countdown && ( // Thêm điều kiện !countdown
                 <div className="game-over-screen">
                     {isGameOver ? (
                         <>
@@ -160,6 +261,23 @@ const Game = () => {
                             <button onClick={startGame}>Bắt đầu</button>
                         </>
                     )}
+                </div>
+            )}
+
+            {/* Menu tạm dừng */}
+            {isPaused && !countdown && ( // Thêm điều kiện !countdown
+                <div className="pause-menu">
+                    <div className="pause-menu-content">
+                        <h2>Tạm Dừng</h2>
+                        <div className="pause-menu-buttons">
+                            <button className="resume-button" onClick={handleResume}>
+                                Tiếp Tục
+                            </button>
+                            <button className="home-button" onClick={handleHome}>
+                                Trang Chủ
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
