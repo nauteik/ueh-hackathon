@@ -31,7 +31,7 @@ export const EXPERIENCE_PACKAGES = [
   {
     title: '🎭 Biểu diễn rối nước',
     description: 'Thưởng thức màn biểu diễn rối nước truyền thống với các câu chuyện dân gian Việt Nam',
-    price: '500.000đ',
+    price: '200.000đ',
     duration: '60 phút',
     borderColor: 'border-blue-500',
     priceColor: 'text-blue-600'
@@ -39,18 +39,10 @@ export const EXPERIENCE_PACKAGES = [
   {
     title: '🎨 Workshop học múa rối',
     description: 'Học cách điều khiển rối nước từ các nghệ nhân có kinh nghiệm',
-    price: '800.000đ',
+    price: '400.000đ',
     duration: '120 phút',
     borderColor: 'border-green-500',
     priceColor: 'text-green-600'
-  },
-  {
-    title: '👑 Trải nghiệm VIP',
-    description: 'Gói trải nghiệm đầy đủ: biểu diễn + workshop + ăn uống truyền thống',
-    price: '1.200.000đ',
-    duration: '180 phút',
-    borderColor: 'border-purple-500',
-    priceColor: 'text-purple-600'
   }
 ]
 
