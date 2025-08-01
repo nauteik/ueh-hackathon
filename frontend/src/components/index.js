@@ -13,14 +13,14 @@ export { ForumSection } from './Forum'
 // Booking components
 export { BookingSection, BookingForm, ExperiencePackages, ExperienceCard } from './Booking'
 
-// Game components
-export { 
-  GameSection, 
-  GameCanvas, 
-  GameControls, 
-  WaterSurface, 
-  WaterPuppet, 
-  ScorePanel, 
-  ControlButtons, 
-  Instructions 
-} from './Game'
+// // Game components
+// export { 
+//   GameSection, 
+//   GameCanvas, 
+//   GameControls, 
+//   WaterSurface, 
+//   WaterPuppet, 
+//   ScorePanel, 
+//   ControlButtons, 
+//   Instructions 
+// } from './Game'

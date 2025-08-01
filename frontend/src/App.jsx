@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Navigation, HeroSection, AboutSection, ForumSection, BookingSection, GameSection } from './components'
+import { Navigation, HeroSection, AboutSection, ForumSection, BookingSection } from './components'
+import Game from './components/Game/Game'
 import './App.css'
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
       case 'booking':
         return <BookingSection />
       case 'game':
-        return <GameSection />
+        return <Game />
       default:
         return <HeroSection setActiveSection={setActiveSection} />
     }
