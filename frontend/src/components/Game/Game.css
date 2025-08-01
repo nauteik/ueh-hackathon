@@ -1,0 +1,121 @@
+/* Game.css */
+.game-container {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../../../public/background_moonlight.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* .water class removed as per the suggestion */
+
+/* Tạo sóng bằng pseudo-elements */
+.water::before, .water::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200px;
+    left: -50%;
+    top: -150px;
+    background: #fff;
+    border-radius: 45%;
+    animation: wave 10s linear infinite;
+}
+
+.water::after {
+    border-radius: 40%;
+    background: rgba(255, 255, 255, 0.3);
+    animation: wave 15s linear infinite;
+    top: -120px;
+}
+
+@keyframes wave {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.puppet-container {
+    position: absolute;
+    bottom: 25%; /* Vị trí gốc của con rối, cao hơn đáy nước một chút */
+    left: 50%;
+    width: 2000px; /* Điều chỉnh cho phù hợp với ảnh của bạn */
+    height: 400px;
+    transform-origin: bottom center; /* Rất quan trọng: xoay từ điểm đáy */
+    transition: transform 0.2s ease-out, bottom 1s ease-in-out; /* Hiệu ứng mượt mà */
+    pointer-events: none;
+}
+
+.puppet-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Giao diện người dùng (UI) */
+.game-ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px #000;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.pause-button {
+    padding: 10px 20px;
+    font-size: 0.6em;
+    cursor: pointer;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 5px;
+}
+
+.pause-button:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.game-over-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff4757;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 11;
+}
+
+.game-over-screen h2 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.game-over-screen button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background: #ff4757;
+    color: white;
+    border-radius: 5px;
+}
+
+.front-image {
+    position: absolute;
+    bottom: -175px;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
