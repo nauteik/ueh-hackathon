@@ -19,7 +19,7 @@ const Navigation = ({ activeSection, setActiveSection }) => {
         ? 'bg-[#0B4B3A]/95 backdrop-blur-xl border-b-2 border-[#F9B949] shadow-2xl' 
         : 'bg-transparent'
     }`}>
-      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex items-center space-x-4 group cursor-pointer">
@@ -46,9 +46,6 @@ const Navigation = ({ activeSection, setActiveSection }) => {
                     : 'text-[#F9B949] hover:text-white hover:bg-[#B91C1C]/30 border-2 border-transparent hover:border-[#F9B949]/50 hover:scale-105'
                 }`}
               >
-                <span className="text-lg group-hover:scale-110 transition-transform duration-200">
-                  {item.icon}
-                </span>
                 <span className="font-medium">{item.label}</span>
                 
                 {/* Active Indicator */}
@@ -90,7 +87,6 @@ const Navigation = ({ activeSection, setActiveSection }) => {
                     : 'text-[#F9B949] hover:text-white hover:bg-[#B91C1C]/30 border-l-4 border-transparent'
                 }`}
               >
-                <span className="text-lg">{item.icon}</span>
                 <span>{item.label}</span>
               </button>
             ))}
