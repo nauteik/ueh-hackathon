@@ -6,13 +6,21 @@ import WaterPuppet from './WaterPuppet'
 
 const GameCanvas = ({ gameStarted, puppetPosition, balance, score }) => {
   return (
-    <div className="bg-white rounded-xl shadow-2xl overflow-hidden mb-8">
+    <div className="relative backdrop-blur-sm rounded-xl overflow-hidden mb-8 border-2 border-[#F9B949]/40">
+      {/* Temple roof decoration on top */}
+      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-[#F9B949] rounded-t-md z-10"></div>
+      <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-24 h-3 bg-[#B91C1C] rounded-t-md z-10"></div>
+      
+      {/* Decorative Corners - Vietnamese style */}
+      <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-[#F9B949] opacity-70 z-10"></div>
+      <div className="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-[#F9B949] opacity-70 z-10"></div>
+      
       <div className="h-96 md:h-[500px]">
         <Canvas camera={{ position: [0, 6, 12], fov: 65 }}>
           <ambientLight intensity={0.8} />
           <directionalLight position={[10, 15, 5]} intensity={1.5} color="#FFFFFF" />
           <pointLight position={[-5, 8, 5]} intensity={0.8} color="#7DD3FC" />
-          <pointLight position={[5, 8, 5]} intensity={0.8} color="#FBBF24" />
+          <pointLight position={[5, 8, 5]} intensity={0.8} color="#F9B949" />
           
           <Suspense fallback={null}>
             <WaterSurface />
@@ -21,7 +29,7 @@ const GameCanvas = ({ gameStarted, puppetPosition, balance, score }) => {
             <Text
               position={[0, 5, 0]}
               fontSize={0.8}
-              color="#059669"
+              color="#F9B949"
               anchorX="center"
               anchorY="middle"
             >

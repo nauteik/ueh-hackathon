@@ -1,6 +1,128 @@
 import React, { useEffect, useState } from 'react'
-import FeatureCard from './FeatureCard'
-import { FEATURES } from '../../constants'
+import {
+  Box,
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  Grid,
+  LinearProgress,
+  Chip,
+  Avatar,
+  Paper,
+  Fade,
+  Grow
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
+import {
+  PlayArrow,
+  CalendarToday,
+  Timeline as TimelineIcon,
+  Home as HomeIcon,
+  Public as PublicIcon,
+  TheaterComedy as TheaterIcon
+} from '@mui/icons-material'
+
+// Styled Components với theme colors
+const StyledSection = styled(Box)(({ theme }) => ({
+  minHeight: '100vh',
+  background: 'linear-gradient(135deg, #1a4d3a 0%, #0f3d2a 100%)',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: 'url("/muaroi.jpg")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    filter: 'blur(3px)',
+    zIndex: 1
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(135deg, rgba(26, 77, 58, 0.85) 0%, rgba(15, 61, 42, 0.9) 100%)',
+    zIndex: 2
+  }
+}))
+
+const TimelineCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(135deg, rgba(185, 28, 28, 0.95) 0%, rgba(139, 0, 0, 0.95) 100%)',
+  backdropFilter: 'blur(10px)',
+  border: '2px solid rgba(249, 185, 73, 0.4)',
+  borderRadius: '16px',
+  padding: '1.5rem',
+  position: 'relative',
+  transition: 'all 0.3s ease',
+  cursor: 'pointer',
+  maxWidth: '380px',
+  width: '100%',
+  '&:hover': {
+    transform: 'scale(1.05) translateY(-8px)',
+    boxShadow: '0 15px 35px rgba(249, 185, 73, 0.3)',
+    borderColor: '#F9B949',
+    zIndex: 10
+  }
+}))
+
+const StatCard = styled(Paper)(({ theme }) => ({
+  background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.2) 0%, rgba(234, 179, 8, 0.2) 100%)',
+  backdropFilter: 'blur(10px)',
+  border: '2px solid rgba(249, 185, 73, 0.3)',
+  borderRadius: '16px',
+  padding: '1.5rem',
+  textAlign: 'center',
+  transition: 'all 0.3s ease',
+  height: 'auto',
+  minHeight: '200px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    borderColor: '#F9B949',
+    boxShadow: '0 8px 25px rgba(249, 185, 73, 0.2)'
+  }
+}))
+
+const StyledButton = styled(Button)(({ theme, variant }) => ({
+  padding: '16px 48px',
+  fontSize: '1.25rem',
+  fontWeight: 'bold',
+  borderRadius: '16px',
+  textTransform: 'none',
+  transition: 'all 0.3s ease',
+  border: '3px solid #F9B949',
+  '&:hover': {
+    transform: 'scale(1.05) translateY(-4px)'
+  },
+  ...(variant === 'primary' && {
+    background: 'linear-gradient(135deg, #B91C1C 0%, #8B0000 100%)',
+    color: 'white',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+      boxShadow: '0 10px 30px rgba(185, 28, 28, 0.5)'
+    }
+  }),
+  ...(variant === 'secondary' && {
+    background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.2) 0%, rgba(234, 179, 8, 0.2) 100%)',
+    color: '#F9B949',
+    '&:hover': {
+      background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.3) 0%, rgba(234, 179, 8, 0.3) 100%)',
+      boxShadow: '0 10px 30px rgba(249, 185, 73, 0.3)'
+    }
+  })
+}))
 
 const HeroSection = ({ setActiveSection }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -9,121 +131,502 @@ const HeroSection = ({ setActiveSection }) => {
     setIsVisible(true)
   }, [])
 
+  // Timeline data - simplified without icons and positions
+  const timelineData = [
+    {
+      year: "Thế kỷ XI - XIV",
+      title: "Khởi nguồn và phát triển",
+      description: "Nghệ thuật Rối Nước phát triển mạnh, được biểu diễn trong cung đình tâm phương tiện giải trí cho vua chúa cũng như các sứ giả của nước ngoài."
+    },
+    {
+      year: "Thế kỷ XV - XIX",
+      title: "Thời kỳ hoàng kim",
+      description: "Tuy không còn biểu diễn trong cung đình nhưng tiếp tục phát triển với nhiều sáng tạo độc đáo và kỹ thuật tinh tế trong đời sống, các hoạt động văn hoá, xã hội. Tiếp thu từ Chèo, Tuồng và thêm nhiều tối ca, tối thoại."
+    },
+    {
+      year: "1945 - 1954",
+      title: "Thời kỳ khó khăn",
+      description: "Rối nước có sự mai một khi kẻ thù xâm lược tàn phá các di sản văn hoá, cuộc sống hoà bình tan rã, nhân dân cả nước nổi dậy đấu tranh giành độc lập dân tộc."
+    },
+    {
+      year: "1955 - 1975",
+      title: "Phục hồi và bảo tồn",
+      description: "Kháng chiến chống Mỹ: Cả nước rộn ràng giải phóng miền Nam đấu khó khăn, sự phát triển của rối nước tại chỗ chậm lại nhưng vẫn được tiếp tục."
+    },
+    {
+      year: "Từ năm 1984",
+      title: "Thời kỳ phát triển mới",
+      description: "Rối nước Việt Nam được biết đến ở nhiều nơi trên thế giới và ngày càng được công bố rộng rãi cho đến ngày nay, những tình giá trị truyền thống và văn bản sáng tạo."
+    },
+    {
+      year: "Tháng 3/1956",
+      title: "Công nhận chính thức",
+      description: "Bác Hồ ra chỉ thị thành lập ngành Rối chuyên nghiệp của Việt Nam. Múa Rối Nước cũng từ đó mà phát triển, thoát ra khỏi các làng xã và được phổ cập rộng rãi trong nhân dân cả nước."
+    }
+  ]
+
+  // Statistics data from the image
+  const statistics = [
+    {
+      number: "14",
+      label: "phường múa",
+      sublabel: "trải dài từ Bắc tới Nam trong đó mỗi số phường rối nước vẫn còn giữ được tổ nghề",
+      icon: "🏘️"
+    },
+    {
+      number: "30",
+      label: "tiết mục",
+      sublabel: "có truyền và hàng trăm tiết mục hiện đại kể về sự tích dân gian và cuộc sống hàng ngày của người dân Việt",
+      icon: "🎪"
+    },
+    {
+      number: "40",
+      label: "quốc gia",
+      sublabel: "nơi tổ chức hàng trăm chuyên lưu diễn nước ngoài, tham dự các liên hoan sân khấu quốc tế",
+      icon: "🌍"
+    }
+  ]
+
+  // Solutions data from the image
+  const solutions = [
+    { title: "Sưu tầm thêm sân khấu Múa rối nước", icon: "📚" },
+    { title: "Đẩy mạnh và thông nhất công tác đào tạo", icon: "📈" },
+    { title: "Nhà nước quan tâm, đầu tư về tài chính", icon: "💰" },
+    { title: "Phục hồi được những trò diễn độc đáo", icon: "🎯" },
+    { title: "Xây dựng thêm tiết mục hoàn toàn mới", icon: "🔧" }
+  ]
+
   return (
-    <section className="relative min-h-screen overflow-hidden w-full">
-      {/* Animated Background - Sử dụng màu từ hình ảnh tham khảo */}
-      <div className="absolute inset-0 bg-[#0B4B3A]"> {/* Xanh lá đậm */}
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='70' height='70' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F9B949' fill-opacity='0.2'%3E%3Cpath d='M20 38a12 12 0 0 1 12-12 12 12 0 0 1 12 12 12 12 0 0 1-12 12 12 12 0 0 1-12-12zm28 0a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm12 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 36a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }}></div>
-        </div>
-        
-        {/* Floating Elements - Sử dụng màu từ hình ảnh tham khảo */}
-        <div className="absolute top-20 left-10 w-96 h-96 bg-[#B91C1C] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div> {/* Đỏ */}
-        <div className="absolute top-40 right-10 w-96 h-96 bg-[#F9B949] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div> {/* Vàng */}
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-[#B91C1C] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div> {/* Đỏ */}
-        
-        {/* Thêm sóng nước đỏ ở dưới - giống trong hình */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-[#B91C1C] opacity-90" style={{
-          maskImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 1200 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\" fill=\"%23B91C1C\"/></svg>')",
-          maskSize: "cover",
-          WebkitMaskImage: "url('data:image/svg+xml;utf8,<svg viewBox=\"0 0 1200 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\" fill=\"%23B91C1C\"/></svg>')",
-          WebkitMaskSize: "cover"
-        }}></div>
-        
-        {/* Thêm đường viền vàng trên sóng đỏ */}
-        <div className="absolute bottom-[124px] left-0 right-0 h-2 bg-[#F9B949]"></div>
-      </div>
+    <StyledSection>
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 3, pt: 12, pb: 8 }}>
 
-      <div className="relative z-10 pt-32 pb-20 w-full">
-        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Content */}
-          <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="mb-8">
-              <div className="inline-flex items-center px-6 py-3 bg-[#B91C1C]/20 backdrop-blur-sm rounded-full border-2 border-[#F9B949]/40 text-[#F9B949] text-sm font-medium mb-6">
-                <span className="animate-pulse mr-2">✨</span>
-                Nghệ thuật truyền thống gặp công nghệ hiện đại
-              </div>
-            </div>
+        {/* Header Section với Material-UI */}
+        <Fade in={isVisible} timeout={1000}>
+          <Box textAlign="center" mb={12}>
+            <Box mb={4}>
+              <Avatar
+                src="/logo77.png"
+                alt="Logo"
+                sx={{
+                  width: 96,
+                  height: 96,
+                  mx: 'auto',
+                  mb: 3,
+                  animation: 'float 6s ease-in-out infinite'
+                }}
+              />
+            </Box>
 
-            <div className="flex flex-col items-center justify-center mb-8">
-              <div className="w-24 h-24 mb-6">
-                <img src="/logo77.png" alt="Logo" className="w-full h-full object-contain animate-float" />
-              </div>
-              
-              <h1 className="text-6xl md:text-8xl font-extrabold mb-4 leading-tight font-serif">
-                <span className="text-[#F9B949]">LỊCH SỬ</span>
-                <br />
-                <span className="text-white/90 text-5xl md:text-7xl">Rối Nước Việt Nam</span>
-              </h1>
-              
-              <div className="w-full max-w-2xl mx-auto h-1 bg-gradient-to-r from-transparent via-[#B91C1C] to-transparent my-8"></div>
-            </div>
+            <Typography
+              variant="h1"
+              component="h1"
+              sx={{
+                fontSize: { xs: '3rem', md: '5rem' },
+                fontWeight: 'bold',
+                mb: 3,
+                fontFamily: 'Playfair Display, serif'
+              }}
+            >
+              <Box component="span" sx={{ color: '#F9B949', display: 'block' }}>
+                LỊCH SỬ
+              </Box>
+              <Box component="span" sx={{ color: 'white', fontSize: { xs: '2.5rem', md: '4rem' } }}>
+                Rối Nước Việt Nam
+              </Box>
+            </Typography>
 
-            <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed">
-              Khám phá vẻ đẹp của nghệ thuật rối nước cổ truyền qua trải nghiệm 
-              <span className="text-[#F9B949] font-semibold"> 3D tương tác </span>
-              đầy mê hoặc
-            </p>
+            <Typography
+              variant="h5"
+              sx={{
+                color: 'rgba(255,255,255,0.9)',
+                maxWidth: '800px',
+                mx: 'auto',
+                lineHeight: 1.6
+              }}
+            >
+              Nghệ thuật truyền thống ngàn năm - Kho tàng văn hóa dân tộc
+            </Typography>
+          </Box>
+        </Fade>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-20">
-              <button 
-                onClick={() => setActiveSection('game')}
-                className="group relative px-10 py-5 bg-[#B91C1C] text-white text-lg font-bold rounded-xl shadow-2xl hover:shadow-[#B91C1C]/50 transition-all duration-300 hover:scale-105 overflow-hidden border-2 border-[#F9B949]"
-              >
-                <div className="absolute inset-0 bg-[#B91C1C]/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative flex items-center">
-                  <span className="text-2xl mr-3">🎮</span>
-                  Chơi ngay
-                  <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
-                  </svg>
-                </span>
-              </button>
+        {/* Timeline Section với Material-UI */}
+        <Box maxWidth="1200px" mx="auto" mb={12} position="relative" className="timeline-container">
+          {/* Central timeline line */}
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              position: 'absolute',
+              left: '50%',
+              top: 0,
+              bottom: 0,
+              width: '4px',
+              background: 'linear-gradient(to bottom, #F9B949, #B91C1C, #F9B949)',
+              borderRadius: '2px',
+              transform: 'translateX(-50%)',
+              zIndex: 1
+            }}
+          />
 
-              <button 
-                onClick={() => setActiveSection('booking')}
-                className="group px-10 py-5 bg-[#F9B949]/10 backdrop-blur-sm text-[#F9B949] text-lg font-bold rounded-xl border-2 border-[#F9B949] hover:bg-[#F9B949]/20 transition-all duration-300 hover:scale-105"
-              >
-                <span className="flex items-center">
-                  <span className="text-2xl mr-3">📅</span>
-                  Đặt lịch trải nghiệm
-                </span>
-              </button>
-            </div>
-          </div>
+          {timelineData.slice().reverse().map((item, index) => {
+  // Determine position: even index = left, odd index = right
+  const isLeft = index % 2 === 0;
 
-          {/* Feature Cards with Stagger Animation */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-            {FEATURES.map((feature, index) => (
-              <div 
-                key={index}
-                className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ transitionDelay: `${index * 200}ms` }}
-              >
-                <FeatureCard
-                  icon={feature.icon}
-                  title={feature.title}
-                  description={feature.description}
-                />
-              </div>
+  return (
+    <Grow
+      key={index}
+      in={isVisible}
+      timeout={1000}
+      style={{ transitionDelay: `${index * 200}ms` }}
+    >
+      <Box
+        sx={{
+          position: 'relative',
+          mb: { xs: 4, md: 6 },
+          '&:hover .timeline-connector': {
+            opacity: 1,
+            transform: 'translateY(-50%) scaleX(-0.75)'
+          }
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          sx={{
+            position: 'relative',
+            justifyContent: {
+              xs: 'center',
+              md: isLeft ? 'flex-start' : 'flex-end'
+            }
+          }}
+        >
+          {/* Timeline Dot */}
+          <Box
+            sx={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 3,
+              display: { xs: 'none', md: 'block' }
+            }}
+          >
+            <Box
+              sx={{
+                width: 16,
+                height: 16,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #F9B949, #EAB308)',
+                border: '3px solid #1a4d3a',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                animation: 'pulse-dot 2s infinite'
+              }}
+            />
+          </Box>
+
+          {/* Timeline Connector Line */}
+          <Box
+            className="timeline-connector"
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: isLeft ? '50%' : 'calc(50% - 200px)',
+              right: isLeft ? 'calc(50% - 200px)' : '50%',
+              width: '200px',
+              height: '2px',
+              background: 'linear-gradient(90deg, #F9B949, rgba(249, 185, 73, 0.5))',
+              transform: 'translateY(-50%) scaleX(0)',
+              transformOrigin: isLeft ? 'left' : 'right',
+              opacity: 0,
+              transition: 'all 0.3s ease',
+              zIndex: 2,
+              display: { xs: 'none', md: 'block' }
+            }}
+          />
+
+          {/* Timeline Content */}
+          <Grid
+            item
+            xs={12}
+            md={5.5}
+            sx={{
+              display: 'flex',
+              justifyContent: {
+                xs: 'center',
+                md: isLeft ? 'flex-start' : 'flex-end'
+              },
+              pl: { md: isLeft ? 8 : 0 },
+              pr: { md: isLeft ? 0 : 8 }
+            }}
+          >
+                      <TimelineCard className="timeline-card">
+                        <CardContent sx={{ p: 0 }}>
+                          <Chip
+                            label={item.year}
+                            size="small"
+                            sx={{
+                              background: 'linear-gradient(135deg, #F9B949, #EAB308)',
+                              color: '#1a4d3a',
+                              fontWeight: 'bold',
+                              fontSize: '0.85rem',
+                              mb: 1.5,
+                              display: 'block',
+                              width: 'fit-content',
+                              mx: 'auto'
+                            }}
+                          />
+                          <Typography
+                            variant="h6"
+                            component="h3"
+                            color="white"
+                            fontWeight="bold"
+                            mb={1}
+                            textAlign="center"
+                            sx={{ fontSize: { xs: '1rem', md: '1.1rem' } }}
+                          >
+                            {item.title}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="rgba(255,255,255,0.9)"
+                            lineHeight={1.5}
+                            textAlign="center"
+                            sx={{ fontSize: { xs: '0.85rem', md: '0.9rem' } }}
+                          >
+                            {item.description}
+                          </Typography>
+                        </CardContent>
+                      </TimelineCard>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grow>
+            );
+          })}
+        </Box>
+
+        {/* Statistics Section với Material-UI */}
+        <Paper
+          sx={{
+            background: 'linear-gradient(135deg, rgba(185, 28, 28, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(249, 185, 73, 0.4)',
+            borderRadius: '24px',
+            p: 6,
+            mb: 10,
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '-24px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '128px',
+              height: '32px',
+              background: '#F9B949',
+              borderRadius: '12px 12px 0 0'
+            }
+          }}
+        >
+          <Typography
+            variant="h3"
+            component="h2"
+            textAlign="center"
+            color="#F9B949"
+            fontWeight="bold"
+            fontFamily="Playfair Display, serif"
+            mb={6}
+            pt={2}
+          >
+            Giải pháp bảo tồn & phát triển
+          </Typography>
+
+          <Grid container spacing={3} justifyContent="center">
+            {statistics.map((stat, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <StatCard elevation={4}>
+                  <Avatar
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      mx: 'auto',
+                      mb: 2,
+                      background: 'linear-gradient(135deg, #F9B949, #EAB308)',
+                      fontSize: '1.5rem'
+                    }}
+                  >
+                    {stat.icon}
+                  </Avatar>
+                  <Typography variant="h3" component="div" color="#F9B949" fontWeight="bold" mb={1}>
+                    {stat.number}
+                  </Typography>
+                  <Typography variant="h6" component="div" color="white" fontWeight="600" mb={1.5}>
+                    {stat.label}
+                  </Typography>
+                  <Typography variant="body2" color="rgba(255,255,255,0.8)" lineHeight={1.4} fontSize="0.875rem">
+                    {stat.sublabel}
+                  </Typography>
+                </StatCard>
+              </Grid>
             ))}
-          </div>
+          </Grid>
 
-          {/* Scroll Indicator */}
-          <div className="flex justify-center mt-20">
-            <div className="animate-bounce">
-              <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+          {/* Solutions */}
+          <Box mt={6} pt={4} borderTop="1px solid rgba(249, 185, 73, 0.3)">
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+              {solutions.map((solution, index) => (
+                <Grid item xs={6} sm={4} md={2.4} key={index}>
+                  <Box
+                    textAlign="center"
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': { transform: 'scale(1.1)' },
+                      transition: 'all 0.3s',
+                      p: 1
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        mx: 'auto',
+                        mb: 1.5,
+                        background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.2), rgba(185, 28, 28, 0.2))',
+                        border: '2px solid rgba(249, 185, 73, 0.3)',
+                        fontSize: '1.2rem',
+                        '&:hover': { borderColor: '#F9B949' }
+                      }}
+                    >
+                      {solution.icon}
+                    </Avatar>
+                    <Typography
+                      variant="caption"
+                      color="rgba(255,255,255,0.8)"
+                      lineHeight={1.2}
+                      display="block"
+                      sx={{ fontSize: '0.75rem' }}
+                    >
+                      {solution.title}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </Paper>
+
+        {/* Chart Section với Material-UI */}
+        <Paper
+          sx={{
+            background: 'linear-gradient(135deg, rgba(26, 77, 58, 0.9) 0%, rgba(15, 61, 42, 0.9) 100%)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(249, 185, 73, 0.4)',
+            borderRadius: '24px',
+            p: 6,
+            mb: 10,
+            maxWidth: '800px',
+            mx: 'auto',
+            position: 'relative',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '-24px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '160px',
+              height: '32px',
+              background: '#F9B949',
+              borderRadius: '12px 12px 0 0'
+            }
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h3"
+            textAlign="center"
+            color="#F9B949"
+            fontWeight="bold"
+            mb={6}
+            pt={2}
+            lineHeight={1.3}
+          >
+            Đánh giá mức độ hài lòng về Hoạt động tổ chức biểu diễn múa rối
+            <br />
+            <Typography component="span" variant="h5">
+              tại Nhà hát múa rối Thăng Long
+            </Typography>
+          </Typography>
+
+          <Box maxWidth="600px" mx="auto">
+            {[
+              { label: "Không hài lòng", percentage: 5, color: "#B91C1C" },
+              { label: "Bình thường", percentage: 15, color: "#6B7280" },
+              { label: "Hài lòng", percentage: 35, color: "#F9B949" },
+              { label: "Rất hài lòng", percentage: 45, color: "#059669" }
+            ].map((item, index) => (
+              <Box key={index} mb={4}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Box
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: item.color,
+                        boxShadow: `0 0 10px ${item.color}40`
+                      }}
+                    />
+                    <Typography variant="h6" color="white" fontWeight="600">
+                      {item.label}
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" color="rgba(255,255,255,0.9)" fontWeight="bold">
+                    {item.percentage}%
+                  </Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={item.percentage}
+                  sx={{
+                    height: 16,
+                    borderRadius: 8,
+                    backgroundColor: 'rgba(107, 114, 128, 0.5)',
+                    '& .MuiLinearProgress-bar': {
+                      backgroundColor: item.color,
+                      borderRadius: 8,
+                      boxShadow: `0 0 10px ${item.color}40`
+                    }
+                  }}
+                />
+              </Box>
+            ))}
+          </Box>
+        </Paper>
+
+        {/* CTA Buttons với Material-UI */}
+        <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={4} justifyContent="center" alignItems="center">
+          <StyledButton
+            variant="primary"
+            size="large"
+            startIcon={<PlayArrow sx={{ fontSize: '2rem' }} />}
+            endIcon={<PlayArrow />}
+            onClick={() => setActiveSection('game')}
+          >
+            Trải nghiệm 3D
+          </StyledButton>
+
+          <StyledButton
+            variant="secondary"
+            size="large"
+            startIcon={<CalendarToday sx={{ fontSize: '2rem' }} />}
+            onClick={() => setActiveSection('booking')}
+          >
+            Đặt lịch trải nghiệm
+          </StyledButton>
+        </Box>
+
+      </Container>
+    </StyledSection>
   )
 }
 

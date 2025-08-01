@@ -1,8 +1,10 @@
 // Navigation items
 export const NAV_ITEMS = [
-  { id: 'home', label: 'Home', icon: '🏠' },
-  { id: 'booking', label: 'Booking', icon: '📅' },
-  { id: 'game', label: 'Game', icon: '🎮' }
+  { id: 'home', label: 'Home' },
+  { id: 'about', label: 'About Us' },
+  { id: 'forum', label: 'Forum' },
+  { id: 'booking', label: 'Booking' },
+  { id: 'game', label: 'Game' }
 ]
 
 // Feature cards data

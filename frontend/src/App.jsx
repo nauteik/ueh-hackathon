@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Navigation, HeroSection, BookingSection, GameSection } from './components'
+import { Navigation, HeroSection, AboutSection, ForumSection, BookingSection, GameSection } from './components'
 import './App.css'
 
 function App() {
@@ -9,6 +9,10 @@ function App() {
     switch(activeSection) {
       case 'home':
         return <HeroSection setActiveSection={setActiveSection} />
+      case 'about':
+        return <AboutSection />
+      case 'forum':
+        return <ForumSection />
       case 'booking':
         return <BookingSection />
       case 'game':

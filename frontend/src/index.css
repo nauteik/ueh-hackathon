@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --primary-color: #059669; /* Fresh Green */
-  --secondary-color: #F59E0B; /* Golden Yellow */
-  --accent-color: #0EA5E9; /* Bright Water Blue */
-  --background-light: #F0F9FF; /* Very Light Blue */
-  --text-primary: #1F2937; /* Dark Gray */
-  --text-secondary: #4B5563; /* Medium Gray */
-  --text-light: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --primary-color: #0B4B3A; /* Xanh lá đậm */
+  --secondary-color: #B91C1C; /* Đỏ */
+  --accent-color: #F9B949; /* Vàng */
+  --background-dark: #0B4B3A; /* Xanh lá đậm */
+  --text-primary: #FFFFFF; /* Trắng */
+  --text-secondary: rgba(255, 255, 255, 0.8); /* Trắng mờ */
+  --text-accent: #F9B949; /* Vàng */
+  --glass-bg: rgba(185, 28, 28, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -21,32 +21,149 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--background-light);
+  background: var(--background-dark);
   color: var(--text-primary);
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 30%, #7DD3FC 70%, #38BDF8 100%); /* Light sky to bright water */
-  z-index: -2;
 }
 
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Thêm font-serif cho tiêu đề */
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Tùy chỉnh animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Timeline animations */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-item-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.timeline-item-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.timeline-item-mobile {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Pulse animation for timeline dots */
+@keyframes pulse-dot {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 185, 73, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(249, 185, 73, 0);
+  }
+}
+
+.timeline-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+/* Responsive timeline improvements */
+@media (max-width: 768px) {
+  .timeline-card {
+    margin: 0 auto 2rem auto !important;
+    max-width: 90% !important;
+  }
+  
+  .timeline-container {
+    padding: 0 1rem;
+  }
+}
+
+/* Khắc phục lỗi mask-image trên Safari */
+@supports (-webkit-mask-image: none) or (mask-image: none) {
+  .wave-mask {
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23B91C1C"/></svg>');
+    -webkit-mask-size: cover;
+    mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23B91C1C"/></svg>');
+    mask-size: cover;
+  }
+}
+
+/* Đảm bảo layout nhất quán */
+.section-container {
   width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center bottom, rgba(56, 189, 248, 0.2) 0%, transparent 60%); /* Gentle water glow */
-  z-index: -1;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
+@media (min-width: 640px) {
+  .section-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container {
+    padding: 0 2rem;
+  }
+}
+
+/* Timeline responsive design */
+@media (max-width: 768px) {
+  .timeline-mobile {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .timeline-content-mobile {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0 1rem !important;
+    margin-top: 2rem;
+  }
+  
+  .timeline-dot-mobile {
+    position: relative !important;
+    left: auto !important;
+    transform: none !important;
+    margin-bottom: 1rem;
+  }
+}
