@@ -1,103 +1,184 @@
 .app {
-  width: 100%;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
+  text-align: center;
 }
 
-/* Navigation Styles */
-.app-navigation {
-  position: fixed;
+.app-header {
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  height: 50px;
+  margin-bottom: 0.5rem;
+}
+
+.app-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.app-header p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.canvas-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
+}
+
+.game-ui {
+  position: fixed;
+  bottom: 0;
+  left: 0;
   right: 0;
-  background: transparent;
-  padding: 1rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  padding: 1.5rem;
+  z-index: 10;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.score-panel {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.nav-brand {
+.score-panel h2 {
+  color: var(--secondary-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.balance-meter {
   display: flex;
   align-items: center;
-}
-
-.nav-logo {
-  height: 50px;
-  width: auto;
-  object-fit: contain;
-}
-
-.nav-slogan {
-  display: flex;
-  align-items: center;
-}
-
-.nav-slogan span {
-  color: white;
-  font-size: 1.1rem;
+  gap: 1rem;
+  color: var(--text-primary);
   font-weight: 500;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.balance-bar {
+  width: 200px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.balance-indicator {
+  width: 20px;
+  height: 16px;
+  border-radius: 8px;
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.game-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(5, 150, 105, 0.4);
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.main-content {
-  flex: 1;
-  padding-top: 80px; /* Space for navigation */
-  padding-bottom: 20px; /* Minimal bottom padding */
-  padding-right: 0; /* Remove right padding for full width */
-  width: 100%;
-  height: calc(100vh - 80px); /* Full height minus nav */
-  overflow: hidden; /* Let Timeline handle its own scrolling */
+.game-button:hover {
+  background: #047857;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(5, 150, 105, 0.6);
 }
 
-/* Page transitions */
-.page-transition {
-  width: 100%;
-  height: 100%;
+.start-button {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
 }
 
+.reset-button {
+  background: var(--accent-color);
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+}
+
+.reset-button:hover {
+  background: #0284C7;
+  box-shadow: 0 6px 25px rgba(14, 165, 233, 0.6);
+}
+
+.instructions {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.instructions p {
+  margin: 0.25rem 0;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-  .app-navigation {
-    padding: 0.75rem 1rem;
+  .app-header {
+    padding: 1rem;
   }
   
-  .nav-logo {
-    height: 40px;
+  .app-header h1 {
+    font-size: 1.8rem;
   }
   
-  .nav-slogan span {
+  .score-panel {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .balance-bar {
+    width: 150px;
+  }
+  
+  .game-button {
+    padding: 0.8rem 1.5rem;
     font-size: 1rem;
   }
   
-  .main-content {
-    padding-top: 70px; /* Less space for mobile nav */
-    padding-bottom: 20px; /* Minimal bottom padding */
-    padding-right: 0; /* Remove right padding for full width */
-    height: calc(100vh - 70px); /* Full height minus nav */
-  }
-}
-
-@media (max-width: 480px) {
-  .app-navigation {
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .nav-logo {
-    height: 35px;
-  }
-  
-  .nav-slogan span {
-    font-size: 0.9rem;
-  }
-  
-  .main-content {
-    padding-top: 60px;
-    padding-bottom: 20px;
-    padding-right: 0; /* Remove right padding for full width */
-    height: calc(100vh - 60px); /* Full height minus nav */
+  .instructions {
+    font-size: 0.8rem;
   }
 }

@@ -2,18 +2,15 @@
 @import "tailwindcss";
 
 :root {
-  --primary-color: #4A90E2;
-  --secondary-color: #E6B89C;
-  --accent-color: #E74C3C;
-  --background-light: #F5F1E8;
-  --text-primary: #2C3E50;
-  --text-secondary: #7F8C8D;
+  --primary-color: #059669; /* Fresh Green */
+  --secondary-color: #F59E0B; /* Golden Yellow */
+  --accent-color: #0EA5E9; /* Bright Water Blue */
+  --background-light: #F0F9FF; /* Very Light Blue */
+  --text-primary: #1F2937; /* Dark Gray */
+  --text-secondary: #4B5563; /* Medium Gray */
   --text-light: #ffffff;
-  --dark-bg: rgba(44, 62, 80, 0.9);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-bg-dark: rgba(245, 241, 232, 0.9);
-  --border-glass: rgba(74, 144, 226, 0.3);
-  --shadow-color: rgba(44, 62, 80, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -38,11 +35,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/bg1.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  /* filter: blur(5px); */
+  background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 30%, #7DD3FC 70%, #38BDF8 100%); /* Light sky to bright water */
   z-index: -2;
 }
 
@@ -53,7 +46,7 @@ body::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(54, 54, 29, 0.7);
+  background: radial-gradient(circle at center bottom, rgba(56, 189, 248, 0.2) 0%, transparent 60%); /* Gentle water glow */
   z-index: -1;
 }
 
