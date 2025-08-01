@@ -7,8 +7,11 @@ import com.example.be_hackathon_ueh_2025.model.PostMedia;
 import com.example.be_hackathon_ueh_2025.service.PostService;
 import com.example.be_hackathon_ueh_2025.service.PostMediaService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
-import jakarta.servlet.http.HttpServletRequest; // ✅ Change this line
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -30,6 +35,8 @@ public class PostController {
     
     private final PostService postService;
     private final PostMediaService postMediaService;
+    private final ObjectMapper objectMapper;
+    private final Validator validator;
     
     // Get all published posts (public)
     @GetMapping
@@ -89,48 +96,51 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
     
-    // UNIFIED CREATE POST ENDPOINT
-    @PostMapping
+    // CREATE POST - ONLY FORM-DATA (supports both with and without media)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createPost(
-            HttpServletRequest request,
-            @RequestPart(value = "post", required = false) @Valid PostRequest multipartRequest,
-            @RequestBody(required = false) @Valid PostRequest jsonRequest,
+            @RequestPart("post") String postData,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         
         try {
-            String contentType = request.getContentType();
-            PostRequest actualRequest;
+            log.info("Processing form-data request");
             
-            if (contentType != null && contentType.toLowerCase().startsWith("multipart/form-data")) {
-                // Multipart request
-                log.info("Processing multipart request");
-                actualRequest = multipartRequest;
+            // Parse JSON string to PostRequest object
+            PostRequest request;
+            try {
+                request = objectMapper.readValue(postData, PostRequest.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Invalid JSON format for post data: " + e.getMessage());
+            }
+            
+            // Validate the parsed object
+            Set<ConstraintViolation<PostRequest>> violations = validator.validate(request);
+            if (!violations.isEmpty()) {
+                String errors = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.joining(", "));
+                throw new RuntimeException("Validation failed: " + errors);
+            }
+            
+            // Check if files are provided
+            if (files != null && !files.isEmpty()) {
+                // Filter out empty files
+                List<MultipartFile> validFiles = files.stream()
+                        .filter(file -> file != null && !file.isEmpty())
+                        .collect(Collectors.toList());
                 
-                if (actualRequest == null) {
-                    throw new RuntimeException("Post data is required");
-                }
-                
-                // Check if files are provided
-                if (files != null && !files.isEmpty()) {
-                    log.info("Creating post with {} media files", files.size());
-                    PostResponse post = postService.createPostWithMedia(actualRequest, files);
+                if (!validFiles.isEmpty()) {
+                    log.info("Creating post with {} media files", validFiles.size());
+                    PostResponse post = postService.createPostWithMedia(request, validFiles);
                     return ResponseEntity.ok(post);
                 } else {
-                    log.info("Creating post without media files");
-                    PostResponse post = postService.createPost(actualRequest);
+                    log.info("Creating post without valid media files");
+                    PostResponse post = postService.createPost(request);
                     return ResponseEntity.ok(post);
                 }
-                
             } else {
-                // JSON request
-                log.info("Processing JSON request");
-                actualRequest = jsonRequest;
-                
-                if (actualRequest == null) {
-                    throw new RuntimeException("Post data is required");
-                }
-                
-                PostResponse post = postService.createPost(actualRequest);
+                log.info("Creating post without media files");
+                PostResponse post = postService.createPost(request);
                 return ResponseEntity.ok(post);
             }
             
@@ -143,44 +153,52 @@ public class PostController {
         }
     }
     
-    // UNIFIED UPDATE POST ENDPOINT
-    @PutMapping("/{id}")
+    // UPDATE POST - ONLY FORM-DATA (supports both with and without media)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePost(
             @PathVariable Long id,
-            HttpServletRequest request,
-            @RequestPart(value = "post", required = false) @Valid PostRequest multipartRequest,
-            @RequestBody(required = false) @Valid PostRequest jsonRequest,
+            @RequestPart("post") String postData,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         
         try {
-            String contentType = request.getContentType();
-            PostRequest actualRequest;
+            log.info("Processing form-data update request for post: {}", id);
             
-            if (contentType != null && contentType.toLowerCase().startsWith("multipart/form-data")) {
-                // Multipart request
-                actualRequest = multipartRequest;
+            // Parse JSON string to PostRequest object
+            PostRequest request;
+            try {
+                request = objectMapper.readValue(postData, PostRequest.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Invalid JSON format for post data: " + e.getMessage());
+            }
+            
+            // Validate the parsed object
+            Set<ConstraintViolation<PostRequest>> violations = validator.validate(request);
+            if (!violations.isEmpty()) {
+                String errors = violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.joining(", "));
+                throw new RuntimeException("Validation failed: " + errors);
+            }
+            
+            // Check if files are provided
+            if (files != null && !files.isEmpty()) {
+                // Filter out empty files
+                List<MultipartFile> validFiles = files.stream()
+                        .filter(file -> file != null && !file.isEmpty())
+                        .collect(Collectors.toList());
                 
-                if (actualRequest == null) {
-                    throw new RuntimeException("Post data is required");
-                }
-                
-                if (files != null && !files.isEmpty()) {
-                    PostResponse post = postService.updatePostWithMedia(id, actualRequest, files);
+                if (!validFiles.isEmpty()) {
+                    log.info("Updating post with {} media files", validFiles.size());
+                    PostResponse post = postService.updatePostWithMedia(id, request, validFiles);
                     return ResponseEntity.ok(post);
                 } else {
-                    PostResponse post = postService.updatePost(id, actualRequest);
+                    log.info("Updating post without valid media files");
+                    PostResponse post = postService.updatePost(id, request);
                     return ResponseEntity.ok(post);
                 }
-                
             } else {
-                // JSON request
-                actualRequest = jsonRequest;
-                
-                if (actualRequest == null) {
-                    throw new RuntimeException("Post data is required");
-                }
-                
-                PostResponse post = postService.updatePost(id, actualRequest);
+                log.info("Updating post without media files");
+                PostResponse post = postService.updatePost(id, request);
                 return ResponseEntity.ok(post);
             }
             
