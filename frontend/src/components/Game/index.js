@@ -1,0 +1,8 @@
+export { default as GameSection } from './GameSection'
+export { default as GameCanvas } from './GameCanvas'
+export { default as GameControls } from './GameControls'
+export { default as WaterSurface } from './WaterSurface'
+export { default as WaterPuppet } from './WaterPuppet'
+export { default as ScorePanel } from './ScorePanel'
+export { default as ControlButtons } from './ControlButtons'
+export { default as Instructions } from './Instructions'
