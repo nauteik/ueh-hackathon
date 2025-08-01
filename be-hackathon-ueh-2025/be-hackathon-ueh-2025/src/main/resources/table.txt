@@ -1,0 +1,142 @@
+-- Tạo database
+CREATE DATABASE hackathon_forum_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE hackathon_forum_db;
+
+-- Tạo bảng users
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100),
+    avatar VARCHAR(255),
+    bio TEXT,
+    role ENUM('USER', 'MODERATOR', 'ADMIN') NOT NULL DEFAULT 'USER',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_username (username),
+    INDEX idx_email (email),
+    INDEX idx_role (role),
+    INDEX idx_is_active (is_active)
+);
+
+-- Tạo bảng posts
+CREATE TABLE posts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    is_published BOOLEAN DEFAULT FALSE,
+    view_count BIGINT DEFAULT 0,
+    like_count BIGINT DEFAULT 0,
+    comment_count BIGINT DEFAULT 0,
+    author_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_author (author_id),
+    INDEX idx_published (is_published),
+    INDEX idx_created_at (created_at),
+    FULLTEXT(title, content)
+);
+
+-- Tạo bảng comments
+CREATE TABLE comments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    like_count BIGINT DEFAULT 0,
+    is_edited BOOLEAN DEFAULT FALSE,
+    status ENUM('ACTIVE', 'DELETED', 'HIDDEN') DEFAULT 'ACTIVE',
+    author_id BIGINT NOT NULL,
+    post_id BIGINT NOT NULL,
+    parent_comment_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    INDEX idx_author (author_id),
+    INDEX idx_post (post_id),
+    INDEX idx_parent (parent_comment_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
+);
+
+-- Tạo bảng post_likes
+CREATE TABLE post_likes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_post_user_like (post_id, user_id),
+    INDEX idx_post (post_id),
+    INDEX idx_user (user_id)
+);
+
+-- Tạo bảng post_media
+CREATE TABLE post_media (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL,
+    original_file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_url VARCHAR(500) NOT NULL,
+    media_type ENUM('IMAGE', 'VIDEO') NOT NULL,
+    file_size BIGINT NOT NULL,
+    mime_type VARCHAR(100),
+    width INT,
+    height INT,
+    duration INT, -- for videos in seconds
+    thumbnail VARCHAR(500), -- thumbnail URL for videos
+    display_order INT DEFAULT 0,
+    post_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id),
+    INDEX idx_media_type (media_type),
+    INDEX idx_display_order (display_order)
+);
+
+-- Tạo bảng comment_media
+CREATE TABLE comment_media (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL,
+    original_file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_url VARCHAR(500) NOT NULL,
+    media_type ENUM('IMAGE', 'VIDEO') NOT NULL,
+    file_size BIGINT NOT NULL,
+    mime_type VARCHAR(100),
+    width INT,
+    height INT,
+    duration INT, -- for videos in seconds
+    thumbnail VARCHAR(500), -- thumbnail URL for videos
+    display_order INT DEFAULT 0,
+    comment_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    INDEX idx_comment (comment_id),
+    INDEX idx_media_type (media_type),
+    INDEX idx_display_order (display_order)
+);
+
+
+-- Chèn dữ liệu mẫu
+INSERT INTO users (username, email, password, full_name, role, is_active) VALUES
+('admin', 'admin@hackathon.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/UnuiHKerugFqCGqPa', 'Administrator', 'ADMIN', TRUE),
+('moderator', 'mod@hackathon.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/UnuiHKerugFqCGqPa', 'Moderator User', 'MODERATOR', TRUE),
+('user1', 'user1@hackathon.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/UnuiHKerugFqCGqPa', 'John Doe', 'USER', TRUE),
+('user2', 'user2@hackathon.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/UnuiHKerugFqCGqPa', 'Jane Smith', 'USER', TRUE);
+
+-- Password for all users is: password123
+
+INSERT INTO posts (title, content, is_published, author_id) VALUES
+('Welcome to UEH Hackathon Forum', 'This is the first post in our forum. Let\'s discuss innovative ideas!', TRUE, 1),
+('Tips for Hackathon Success', 'Here are some tips to succeed in hackathons...', TRUE, 2),
+('Looking for Team Members', 'I need developers for my project idea...', TRUE, 3);
+
+INSERT INTO comments (content, author_id, post_id) VALUES
+('Great initiative! Looking forward to participating.', 3, 1),
+('Thanks for the tips! Very helpful.', 4, 2),
+('I\'m interested in joining your team!', 2, 3);
