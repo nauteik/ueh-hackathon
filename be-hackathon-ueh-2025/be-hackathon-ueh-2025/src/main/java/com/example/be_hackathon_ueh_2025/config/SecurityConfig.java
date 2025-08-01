@@ -73,6 +73,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/health/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
+                .requestMatchers("/error").permitAll()
+                // Allow public access to view posts
+                .requestMatchers("/api/posts/**").permitAll()
+                .requestMatchers("/api/users/{id}").permitAll()
                 .anyRequest().authenticated()
             );
         
