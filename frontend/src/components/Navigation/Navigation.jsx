@@ -24,12 +24,12 @@ const Navigation = ({ activeSection, setActiveSection }) => {
           {/* Logo */}
           <div className="flex items-center space-x-4 group cursor-pointer">
             <div className="relative">
-              <img src="/logo77.png" alt="Logo" className="h-12 w-12 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300" />
+              <img src="/comerpital.png" alt="Logo" className="h-12 w-12 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#F9B949] to-[#B91C1C] rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
             </div>
             <div className="hidden sm:block">
               <span className="text-2xl font-bold bg-gradient-to-r from-[#F9B949] to-[#B91C1C] bg-clip-text text-transparent">
-                Rối Nước Việt Nam
+                Nghệ thuật múa rối nước Việt Nam
               </span>
             </div>
           </div>

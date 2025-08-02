@@ -92,7 +92,7 @@ const AboutSection = () => {
       id: 'heritage',
       backgroundImage: '/background1.jpg',
       title: 'Di sản văn hóa ngàn năm',
-      subtitle: 'Rối Nước - Nghệ thuật độc đáo của Việt Nam',
+      subtitle: 'Rối nước - Nghệ thuật độc đáo của Việt Nam',
       content: {
         mainText: 'Nghệ thuật múa rối nước Việt Nam là một trong những hình thức biểu diễn nghệ thuật độc đáo và cổ xưa nhất trên thế giới. Với lịch sử hơn 1000 năm, nghệ thuật này đã trở thành biểu tượng văn hóa đặc trưng của dân tộc Việt Nam.',
         highlights: [

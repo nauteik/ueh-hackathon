@@ -36,7 +36,7 @@ const Game = () => {
                     clearInterval(countInterval);
                     setCountdown(null);
                     setIsPaused(false);
-                    
+
                     if (isResume) {
                         // For resume: keep the stored time
                         startTimeRef.current = performance.now() - (timeAtPause * 1000);
@@ -87,7 +87,7 @@ const Game = () => {
         }
 
         const elapsedTime = (timestamp - startTimeRef.current) / 1000;
-        
+
         // Tính toán tốc độ tăng tuyến tính
         const currentSpeed = INITIAL_SPEED + (elapsedTime * SPEED_INCREMENT);
 
@@ -256,8 +256,16 @@ const Game = () => {
                     ) : (
                         <>
                             <h2>Game Múa Rối Nước</h2>
-                            {/* Cập nhật hướng dẫn chơi */}
-                            <p>Chạm/Click vào hai bên con rối để đổi chiều quay!</p>
+                            <p>Giữ con rối đứng trên mặt nước càng lâu để nhận voucher!</p>
+                            <div className="rewards-guide">
+                                <p>🎁 Phần quà của bạn:</p>
+                                <ul>
+                                    <li>Chơi được 20 giây: Voucher 5.000đ</li>
+                                    <li>Chơi được 40 giây: Voucher 10.000đ</li>
+                                    <li>Chơi được 60 giây: Voucher 15.000đ</li>
+                                </ul>
+                            </div>
+                            <p>Cách chơi: Chạm vào hai bên con rối để đổi chiều quay!</p>
                             <button onClick={startGame}>Bắt đầu</button>
                         </>
                     )}

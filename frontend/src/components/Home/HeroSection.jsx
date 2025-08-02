@@ -136,7 +136,7 @@ const HeroSection = ({ setActiveSection }) => {
     {
       year: "Thế kỷ XI - XIV",
       title: "Khởi nguồn và phát triển",
-      description: "Nghệ thuật Rối Nước phát triển mạnh, được biểu diễn trong cung đình tâm phương tiện giải trí cho vua chúa cũng như các sứ giả của nước ngoài."
+      description: "Nghệ thuật rối nước phát triển mạnh, được biểu diễn trong cung đình tâm phương tiện giải trí cho vua chúa cũng như các sứ giả của nước ngoài."
     },
     {
       year: "Thế kỷ XV - XIX",
@@ -156,7 +156,7 @@ const HeroSection = ({ setActiveSection }) => {
     {
       year: "Từ năm 1984",
       title: "Thời kỳ phát triển mới",
-      description: "Rối nước Việt Nam được biết đến ở nhiều nơi trên thế giới và ngày càng được công bố rộng rãi cho đến ngày nay, những tình giá trị truyền thống và văn bản sáng tạo."
+      description: "Nghệ thuật múa rối nước Việt Nam được biết đến ở nhiều nơi trên thế giới và ngày càng được công bố rộng rãi cho đến ngày nay, những tình giá trị truyền thống và văn bản sáng tạo."
     },
     {
       year: "Tháng 3/1956",
@@ -205,7 +205,7 @@ const HeroSection = ({ setActiveSection }) => {
           <Box textAlign="center" mb={12}>
             <Box mb={4}>
               <Avatar
-                src="/logo77.png"
+                src="/comerpital.png"
                 alt="Logo"
                 sx={{
                   width: 96,
@@ -231,7 +231,7 @@ const HeroSection = ({ setActiveSection }) => {
                 LỊCH SỬ
               </Box>
               <Box component="span" sx={{ color: 'white', fontSize: { xs: '2.5rem', md: '4rem' } }}>
-                Rối Nước Việt Nam
+                Nghệ thuật múa rối nước Việt Nam
               </Box>
             </Typography>
 

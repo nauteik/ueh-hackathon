@@ -259,3 +259,21 @@
         transform: translate(-50%, -50%) scale(0.5);
     }
 }
+
+.rewards-guide {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.rewards-guide ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.rewards-guide li {
+    margin: 5px 0;
+    color: #444;
+}
