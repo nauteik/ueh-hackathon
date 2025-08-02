@@ -4,9 +4,9 @@ import './Game.css';
 import puppetImage from '../../../public/puppet4.png';
 import frontImage from '../../../public/wave1.png';
 
-const Game = () => {
+const Game = ({ setActiveSection }) => { // Thêm props setActiveSection
     // Thêm hằng số vào đầu component
-    const INITIAL_SPEED = 0.1;  // Tốc độ ban đầu
+    const INITIAL_SPEED = 0.5;  // Tốc độ ban đầu
     const SPEED_INCREMENT = 0.05; // Tốc độ tăng mỗi giây
 
     // Thêm các state và ref mới để quản lý tốc độ
@@ -24,6 +24,13 @@ const Game = () => {
     const pausedTimeRef = useRef(0);
     const gameStageRef = useRef(0);
     const [isInitialPosition, setIsInitialPosition] = useState(true);
+    
+    // Thêm ref để theo dõi các mốc voucher đã đạt được
+    const voucherMilestonesRef = useRef({
+        20: false,
+        40: false,
+        60: false
+    });
 
     const startCountdown = (isResume = false) => {
         setIsPaused(true); // Pause game during countdown
@@ -69,6 +76,14 @@ const Game = () => {
         pausedTimeRef.current = 0;
         gameStageRef.current = 0;
         setIsInitialPosition(true); // Đặt vị trí ban đầu
+        
+        // Reset voucher milestones
+        voucherMilestonesRef.current = {
+            20: false,
+            40: false,
+            60: false
+        };
+        
         startCountdown(false);
     };
 
@@ -99,20 +114,28 @@ const Game = () => {
         if (!isPaused && !countdown) {
             setTime(elapsedTime);
 
-            // Kiểm tra mốc thời gian để tặng voucher
-            if (elapsedTime >= 20 && !earnedVouchers.includes(20)) {
+            // Kiểm tra mốc thời gian để tặng voucher với logic cải thiện
+            if (elapsedTime >= 20 && !voucherMilestonesRef.current[20]) {
+                voucherMilestonesRef.current[20] = true;
                 setEarnedVouchers(prev => [...prev, 20]);
                 setShowVoucher({ value: 5000, time: 20 });
+                console.log('Voucher 20s awarded!'); // Debug log
                 setTimeout(() => setShowVoucher(null), 2000);
             }
-            if (elapsedTime >= 40 && !earnedVouchers.includes(40)) {
+            
+            if (elapsedTime >= 40 && !voucherMilestonesRef.current[40]) {
+                voucherMilestonesRef.current[40] = true;
                 setEarnedVouchers(prev => [...prev, 40]);
                 setShowVoucher({ value: 10000, time: 40 });
+                console.log('Voucher 40s awarded!'); // Debug log
                 setTimeout(() => setShowVoucher(null), 2000);
             }
-            if (elapsedTime >= 60 && !earnedVouchers.includes(60)) {
+            
+            if (elapsedTime >= 60 && !voucherMilestonesRef.current[60]) {
+                voucherMilestonesRef.current[60] = true;
                 setEarnedVouchers(prev => [...prev, 60]);
                 setShowVoucher({ value: 15000, time: 60 });
+                console.log('Voucher 60s awarded!'); // Debug log
                 setTimeout(() => setShowVoucher(null), 2000);
             }
         }
@@ -197,8 +220,8 @@ const Game = () => {
     };
 
     const handleHome = () => {
-        // Xử lý quay về trang chủ (có thể là điều hướng đến một route khác)
-        console.log('Về trang chủ');
+        // Sử dụng setActiveSection thay vì navigate
+        setActiveSection('home');
     };
 
     return (
@@ -211,12 +234,13 @@ const Game = () => {
             )}
             {showVoucher && (
                 <div className="voucher-notification">
-                    Chúc mừng! Bạn nhận được voucher {showVoucher.value.toLocaleString()}đ
+                    🎁 Chúc mừng! Bạn nhận được voucher {showVoucher.value.toLocaleString()}đ 
+                    (Mốc {showVoucher.time}s)
                 </div>
             )}
             <div className="game-ui">
                 {!countdown && <p>Thời gian: {time.toFixed(1)}s</p>}
-                {isStarted && !isGameOver && !countdown && ( // Thêm điều kiện !countdown
+                {isStarted && !isGameOver && !countdown && (
                     <button
                         className="pause-button"
                         onClick={togglePause}
@@ -234,7 +258,6 @@ const Game = () => {
                     bottom: isStarted ? '25%' : '-100%',
                 }}
             >
-
                 <img src={puppetImage} alt="Water Puppet" className="puppet-image" />
             </div>
 
@@ -245,18 +268,20 @@ const Game = () => {
                 className="front-image"
             />
 
-            {(!isStarted || isGameOver) && !countdown && ( // Thêm điều kiện !countdown
+            {(!isStarted || isGameOver) && !countdown && (
                 <div className="game-over-screen">
                     {isGameOver ? (
                         <>
                             <h2>THUA RỒI!</h2>
-                            <p>Điểm của bạn: {Math.floor(time)}</p>
+                            <p>Điểm của bạn: {Math.floor(time)}s</p>
+                            <p>Voucher đã nhận: {earnedVouchers.length} phần quà</p>
                             <button onClick={startGame}>Chơi lại</button>
                         </>
                     ) : (
                         <>
                             <h2>Game Múa Rối Nước</h2>
-                            <p>Giữ con rối đứng trên mặt nước càng lâu để nhận voucher!</p>
+                            <p className="white-text">Giữ con rối đứng trên mặt nước càng lâu để nhận voucher!</p>
+                            <p className="white-text">Cách chơi: Chạm vào hai bên con rối để đổi chiều quay!</p>
                             <div className="rewards-guide">
                                 <p>🎁 Phần quà của bạn:</p>
                                 <ul>
@@ -265,7 +290,6 @@ const Game = () => {
                                     <li>Chơi được 60 giây: Voucher 15.000đ</li>
                                 </ul>
                             </div>
-                            <p>Cách chơi: Chạm vào hai bên con rối để đổi chiều quay!</p>
                             <button onClick={startGame}>Bắt đầu</button>
                         </>
                     )}
@@ -273,7 +297,7 @@ const Game = () => {
             )}
 
             {/* Menu tạm dừng */}
-            {isPaused && !countdown && ( // Thêm điều kiện !countdown
+            {isPaused && !countdown && (
                 <div className="pause-menu">
                     <div className="pause-menu-content">
                         <h2>Tạm Dừng</h2>

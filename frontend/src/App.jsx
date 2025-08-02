@@ -18,7 +18,7 @@ function App() {
       case 'booking':
         return <BookingSection />
       case 'game':
-        return <Game />
+        return <Game setActiveSection={setActiveSection} />
       default:
         return <HeroSection setActiveSection={setActiveSection} />
     }
