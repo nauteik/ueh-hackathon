@@ -259,11 +259,7 @@ const ForumSection = () => {
     {
       id: 2,
       title: 'Lịch sử phát triển của nghệ thuật rối nước tại các làng nghề',
-<<<<<<< HEAD
       content: 'Nghệ thuật múa rối nước Việt Nam có lịch sử lâu đời và phát triển mạnh tại nhiều làng nghề. Bài viết này sẽ tìm hiểu...',
-=======
-      content: 'Rối nước Việt Nam có lịch sử lâu đời và phát triển mạnh tại nhiều làng nghề truyền thống. Bài viết này sẽ tìm hiểu về quá trình hình thành và phát triển...',
->>>>>>> faa6716b74c2004e9aef309efbf9dfed3cee1e9a
       author: 'Trần Thị Bình',
       avatar: '/api/placeholder/40/40',
       category: 'history',
