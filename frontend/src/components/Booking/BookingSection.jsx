@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import BookingForm from './BookingForm'
 import ExperiencePackages from './ExperiencePackages'
 import './BookingPage.css'
 
 const BookingSection = () => {
+  const [selectedShow, setSelectedShow] = useState('')
+
+  const handleShowSelect = (showId) => {
+    setSelectedShow(showId)
+  }
+
   return (
     <section className="booking-section min-h-screen relative overflow-hidden w-full">
       {/* Animated Background - Same as HeroSection */}
@@ -39,10 +45,16 @@ const BookingSection = () => {
 
           <div className="booking-content-grid">
             <div className="animate-fade-in-left">
-              <BookingForm />
+              <BookingForm 
+                selectedShow={selectedShow}
+                onShowSelect={handleShowSelect}
+              />
             </div>
             <div className="animate-fade-in-right">
-              <ExperiencePackages />
+              <ExperiencePackages 
+                selectedShow={selectedShow}
+                onShowSelect={handleShowSelect}
+              />
             </div>
           </div>
         </div>

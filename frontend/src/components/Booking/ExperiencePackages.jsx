@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ExperienceCard from './ExperienceCard'
+import ShowCards from './ShowCards'
 import { EXPERIENCE_PACKAGES } from '../../constants'
 
-const ExperiencePackages = () => {
+const ExperiencePackages = ({ onShowSelect, selectedShow }) => {
   return (
     <div className="experience-packages-container animate-fade-in-right">
       <div className="mb-8">
@@ -11,7 +12,7 @@ const ExperiencePackages = () => {
         </h3>
       </div>
       
-      <div className="experience-cards-grid space-y-8">
+      <div className="experience-cards-grid space-y-6">
         {EXPERIENCE_PACKAGES.map((pkg, index) => (
           <div 
             key={index} 
@@ -24,10 +25,17 @@ const ExperiencePackages = () => {
               duration={pkg.duration}
               borderColor={pkg.borderColor}
               priceColor={pkg.priceColor}
+              index={index}
             />
           </div>
         ))}
       </div>
+
+      {/* Show Cards Component */}
+      <ShowCards 
+        selectedShow={selectedShow}
+        onShowSelect={onShowSelect}
+      />
     </div>
   )
 }

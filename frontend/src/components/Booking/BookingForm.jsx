@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './BookingForm.css'
 
-const BookingForm = () => {
+const BookingForm = ({ selectedShow, onShowSelect }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -9,6 +9,7 @@ const BookingForm = () => {
     city: '',
     theater: '',
     experience: 'show',
+    show: selectedShow || '',
     date: '',
     time: ''
   })
@@ -69,6 +70,23 @@ const BookingForm = () => {
     { value: '20:00', label: '20:00 - Buổi tối', icon: '🌙' }
   ]
 
+  // Danh sách chương trình biểu diễn
+  const shows = [
+    { id: 'legend-of-lake', name: '🏮 Huyền thoại Hồ Gươm', duration: '45 phút' },
+    { id: 'four-sacred-animals', name: '🐉 Tứ Linh Thiêng', duration: '60 phút' },
+    { id: 'village-festival', name: '🎪 Lễ Hội Làng Quê', duration: '75 phút' }
+  ]
+
+  // Update formData when selectedShow changes
+  React.useEffect(() => {
+    if (selectedShow && selectedShow !== formData.show) {
+      setFormData(prev => ({
+        ...prev,
+        show: selectedShow
+      }))
+    }
+  }, [selectedShow, formData.show])
+
   const validateForm = () => {
     const newErrors = {}
 
@@ -94,6 +112,10 @@ const BookingForm = () => {
 
     if (!formData.theater) {
       newErrors.theater = 'Vui lòng chọn địa điểm'
+    }
+
+    if (!formData.show) {
+      newErrors.show = 'Vui lòng chọn chương trình biểu diễn'
     }
 
     if (!formData.date) {
@@ -125,6 +147,15 @@ const BookingForm = () => {
         [name]: value,
         theater: '' // Reset theater khi đổi city
       }))
+    } else if (name === 'show') {
+      // Sync with parent component
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+      if (onShowSelect) {
+        onShowSelect(value)
+      }
     } else {
       setFormData(prev => ({
         ...prev,
@@ -175,10 +206,14 @@ const BookingForm = () => {
           city: '',
           theater: '',
           experience: 'show',
+          show: '',
           date: '',
           time: ''
         })
         setSubmitStatus('')
+        if (onShowSelect) {
+          onShowSelect('')
+        }
       }, 3000)
       
     } catch (error) {
@@ -312,6 +347,27 @@ const BookingForm = () => {
           </select>
           {errors.theater && <div className="error-message">{errors.theater}</div>}
         </div>
+
+        <div>
+          <label className="booking-label">Chương trình biểu diễn</label>
+          <select 
+            name="show"
+            value={formData.show}
+            onChange={handleInputChange}
+            className={getInputClassName('show')}
+            required
+          >
+            <option value="" className="bg-[#0B4B3A] text-white">
+              Chọn chương trình
+            </option>
+            {shows.map((show) => (
+              <option key={show.id} value={show.id} className="bg-[#0B4B3A] text-white">
+                {show.name} ({show.duration})
+              </option>
+            ))}
+          </select>
+          {errors.show && <div className="error-message">{errors.show}</div>}
+        </div>
         
         <div>
           <label className="booking-label">Loại trải nghiệm</label>
@@ -323,6 +379,7 @@ const BookingForm = () => {
           >
             <option value="show" className="bg-[#0B4B3A] text-white">🎪 Biểu diễn rối nước (60 phút)</option>
             <option value="workshop" className="bg-[#0B4B3A] text-white">🛠️ Workshop học múa rối (120 phút)</option>
+            <option value="vip" className="bg-[#0B4B3A] text-white">⭐ Trải nghiệm VIP (180 phút)</option>
           </select>
         </div>
         
