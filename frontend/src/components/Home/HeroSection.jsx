@@ -169,19 +169,19 @@ const HeroSection = ({ setActiveSection }) => {
   const statistics = [
     {
       number: "14",
-      label: "phường múa",
+      label: "Phường Múa",
       sublabel: "trải dài từ Bắc tới Nam trong đó mỗi số phường rối nước vẫn còn giữ được tổ nghề",
       icon: "🏘️"
     },
     {
       number: "30",
-      label: "tiết mục",
+      label: "Tiết Mục",
       sublabel: "có truyền và hàng trăm tiết mục hiện đại kể về sự tích dân gian và cuộc sống hàng ngày của người dân Việt",
       icon: "🎪"
     },
     {
       number: "40",
-      label: "quốc gia",
+      label: "Quốc Gia",
       sublabel: "nơi tổ chức hàng trăm chuyên lưu diễn nước ngoài, tham dự các liên hoan sân khấu quốc tế",
       icon: "🌍"
     }
@@ -231,7 +231,7 @@ const HeroSection = ({ setActiveSection }) => {
                 LỊCH SỬ
               </Box>
               <Box component="span" sx={{ color: 'white', fontSize: { xs: '2.5rem', md: '4rem' } }}>
-                Nghệ thuật múa rối nước Việt Nam
+                Văn Hóa Rối Nước Việt Nam
               </Box>
             </Typography>
 
@@ -438,32 +438,20 @@ const HeroSection = ({ setActiveSection }) => {
             mb={6}
             pt={2}
           >
-            Giải pháp bảo tồn & phát triển
+            Thành tựu
           </Typography>
 
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={2} justifyContent="center" sx={{ display: 'flex', flexWrap: 'nowrap' }}>
             {statistics.map((stat, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <StatCard elevation={4}>
-                  <Avatar
-                    sx={{
-                      width: 60,
-                      height: 60,
-                      mx: 'auto',
-                      mb: 2,
-                      background: 'linear-gradient(135deg, #F9B949, #EAB308)',
-                      fontSize: '1.5rem'
-                    }}
-                  >
-                    {stat.icon}
-                  </Avatar>
-                  <Typography variant="h3" component="div" color="#F9B949" fontWeight="bold" mb={1}>
+              <Grid item xs={4} sm={4} md={4} key={index} sx={{ flex: '1 1 0', minWidth: 0 }}>
+                <StatCard elevation={4} sx={{ height: '100%', minHeight: '200px' }}>
+                  <Typography variant="h3" component="div" color="#F9B949" fontWeight="bold" mb={1} sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>
                     {stat.number}
                   </Typography>
-                  <Typography variant="h6" component="div" color="white" fontWeight="600" mb={1.5}>
+                  <Typography variant="h6" component="div" color="white" fontWeight="600" mb={1.5} sx={{ fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.25rem' } }}>
                     {stat.label}
                   </Typography>
-                  <Typography variant="body2" color="rgba(255,255,255,0.8)" lineHeight={1.4} fontSize="0.875rem">
+                  <Typography variant="body2" color="rgba(255,255,255,0.8)" lineHeight={1.4} sx={{ fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.875rem' } }}>
                     {stat.sublabel}
                   </Typography>
                 </StatCard>
@@ -471,40 +459,90 @@ const HeroSection = ({ setActiveSection }) => {
             ))}
           </Grid>
 
-          {/* Solutions */}
-          <Box mt={6} pt={4} borderTop="1px solid rgba(249, 185, 73, 0.3)">
-            <Grid container spacing={2} justifyContent="center" alignItems="center">
+          {/* Solutions Section - Redesigned
+          <Box mt={8} pt={6} borderTop="2px solid rgba(249, 185, 73, 0.3)">
+            <Typography
+              variant="h4"
+              component="h3"
+              textAlign="center"
+              color="#F9B949"
+              fontWeight="bold"
+              fontFamily="Playfair Display, serif"
+              mb={6}
+            >
+              Các giải pháp thực hiện
+            </Typography>
+            
+            <Grid container spacing={4} justifyContent="center">
               {solutions.map((solution, index) => (
-                <Grid item xs={6} sm={4} md={2.4} key={index}>
+                <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
                   <Box
-                    textAlign="center"
                     sx={{
+                      background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.15) 0%, rgba(185, 28, 28, 0.15) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      border: '2px solid rgba(249, 185, 73, 0.3)',
+                      borderRadius: '20px',
+                      padding: '2rem 1.5rem',
+                      textAlign: 'center',
                       cursor: 'pointer',
-                      '&:hover': { transform: 'scale(1.1)' },
-                      transition: 'all 0.3s',
-                      p: 1
+                      transition: 'all 0.4s ease',
+                      height: '100%',
+                      minHeight: '180px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      '&:hover': { 
+                        transform: 'translateY(-12px) scale(1.03)',
+                        borderColor: '#F9B949',
+                        background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.25) 0%, rgba(185, 28, 28, 0.25) 100%)',
+                        boxShadow: '0 20px 40px rgba(249, 185, 73, 0.25)'
+                      },
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: '-100%',
+                        width: '100%',
+                        height: '100%',
+                        background: 'linear-gradient(90deg, transparent, rgba(249, 185, 73, 0.1), transparent)',
+                        transition: 'left 0.6s ease',
+                      },
+                      '&:hover::before': {
+                        left: '100%'
+                      }
                     }}
                   >
                     <Avatar
                       sx={{
-                        width: 48,
-                        height: 48,
+                        width: 64,
+                        height: 64,
                         mx: 'auto',
-                        mb: 1.5,
-                        background: 'linear-gradient(135deg, rgba(249, 185, 73, 0.2), rgba(185, 28, 28, 0.2))',
-                        border: '2px solid rgba(249, 185, 73, 0.3)',
-                        fontSize: '1.2rem',
-                        '&:hover': { borderColor: '#F9B949' }
+                        mb: 2,
+                        background: 'linear-gradient(135deg, #F9B949, #EAB308)',
+                        border: '3px solid rgba(255, 255, 255, 0.2)',
+                        fontSize: '1.8rem',
+                        transition: 'all 0.3s ease',
+                        '&:hover': { 
+                          transform: 'rotate(10deg) scale(1.1)',
+                          boxShadow: '0 8px 20px rgba(249, 185, 73, 0.4)'
+                        }
                       }}
                     >
                       {solution.icon}
                     </Avatar>
                     <Typography
-                      variant="caption"
-                      color="rgba(255,255,255,0.8)"
-                      lineHeight={1.2}
-                      display="block"
-                      sx={{ fontSize: '0.75rem' }}
+                      variant="body1"
+                      color="white"
+                      fontWeight="600"
+                      lineHeight={1.3}
+                      sx={{ 
+                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                        position: 'relative',
+                        zIndex: 1
+                      }}
                     >
                       {solution.title}
                     </Typography>
@@ -512,95 +550,7 @@ const HeroSection = ({ setActiveSection }) => {
                 </Grid>
               ))}
             </Grid>
-          </Box>
-        </Paper>
-
-        {/* Chart Section với Material-UI */}
-        <Paper
-          sx={{
-            background: 'linear-gradient(135deg, rgba(26, 77, 58, 0.9) 0%, rgba(15, 61, 42, 0.9) 100%)',
-            backdropFilter: 'blur(10px)',
-            border: '2px solid rgba(249, 185, 73, 0.4)',
-            borderRadius: '24px',
-            p: 6,
-            mb: 10,
-            maxWidth: '800px',
-            mx: 'auto',
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: '-24px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '160px',
-              height: '32px',
-              background: '#F9B949',
-              borderRadius: '12px 12px 0 0'
-            }
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h3"
-            textAlign="center"
-            color="#F9B949"
-            fontWeight="bold"
-            mb={6}
-            pt={2}
-            lineHeight={1.3}
-          >
-            Đánh giá mức độ hài lòng về Hoạt động tổ chức biểu diễn múa rối
-            <br />
-            <Typography component="span" variant="h5">
-              tại Nhà hát múa rối Thăng Long
-            </Typography>
-          </Typography>
-
-          <Box maxWidth="600px" mx="auto">
-            {[
-              { label: "Không hài lòng", percentage: 5, color: "#B91C1C" },
-              { label: "Bình thường", percentage: 15, color: "#6B7280" },
-              { label: "Hài lòng", percentage: 35, color: "#F9B949" },
-              { label: "Rất hài lòng", percentage: 45, color: "#059669" }
-            ].map((item, index) => (
-              <Box key={index} mb={4}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <Box
-                      sx={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: '50%',
-                        backgroundColor: item.color,
-                        boxShadow: `0 0 10px ${item.color}40`
-                      }}
-                    />
-                    <Typography variant="h6" color="white" fontWeight="600">
-                      {item.label}
-                    </Typography>
-                  </Box>
-                  <Typography variant="h6" color="rgba(255,255,255,0.9)" fontWeight="bold">
-                    {item.percentage}%
-                  </Typography>
-                </Box>
-                <LinearProgress
-                  variant="determinate"
-                  value={item.percentage}
-                  sx={{
-                    height: 16,
-                    borderRadius: 8,
-                    backgroundColor: 'rgba(107, 114, 128, 0.5)',
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: item.color,
-                      borderRadius: 8,
-                      boxShadow: `0 0 10px ${item.color}40`
-                    }
-                  }}
-                />
-              </Box>
-            ))}
-          </Box>
+          </Box> */}
         </Paper>
 
         {/* CTA Buttons với Material-UI */}
