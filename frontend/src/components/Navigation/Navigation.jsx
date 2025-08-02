@@ -28,25 +28,26 @@ const Navigation = ({ activeSection, setActiveSection }) => {
               <div className="absolute inset-0 bg-gradient-to-r from-[#F9B949] to-[#B91C1C] rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
             </div>
             <div className="hidden sm:block">
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#F9B949] to-[#B91C1C] bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#FFD700] via-[#F9B949] to-[#FF6B35] bg-clip-text text-transparent drop-shadow-lg">
                 Nghệ thuật múa rối nước Việt Nam
               </span>
             </div>
           </div>
           
-          {/* Navigation Items */}
-          <div className="hidden md:flex items-center space-x-2">
+          {/* Navigation Items - Centered */}
+          <div className="hidden md:flex items-center justify-center gap-20 flex-1">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveSection(item.id)}
-                className={`group relative flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                className={`group relative flex items-center space-x-2 rounded-xl text-xl font-bold transition-all duration-300 ${
                   activeSection === item.id
                     ? 'bg-[#B91C1C] text-white shadow-lg border-2 border-[#F9B949] scale-105'
                     : 'text-[#F9B949] hover:text-white hover:bg-[#B91C1C]/30 border-2 border-transparent hover:border-[#F9B949]/50 hover:scale-105'
                 }`}
+                style={{ padding: '6px 8px' }}
               >
-                <span className="font-medium">{item.label}</span>
+                <span className="font-bold">{item.label}</span>
                 
                 {/* Active Indicator */}
                 {activeSection === item.id && (
@@ -55,6 +56,9 @@ const Navigation = ({ activeSection, setActiveSection }) => {
               </button>
             ))}
           </div>
+
+          {/* Empty div to balance the layout */}
+          <div className="hidden md:block w-auto"></div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">

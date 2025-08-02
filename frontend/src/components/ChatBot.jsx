@@ -7,7 +7,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Xin chào! Tôi là trợ lý ảo của Chợ Bến Thành. Tôi có thể giúp bạn tìm hiểu về lịch sử và thông tin của chợ.",
+      text: "Xin chào! Tôi là trợ lý ảo về nghệ thuật Rối nước Việt Nam. Tôi có thể giúp bạn tìm hiểu về lịch sử, kỹ thuật biểu diễn và văn hóa truyền thống này.",
       isBot: true,
       timestamp: new Date()
     }
@@ -66,18 +66,20 @@ const ChatBot = () => {
   const getBotResponse = (userMessage) => {
     const message = userMessage.toLowerCase()
     
-    if (message.includes('lịch sử') || message.includes('history')) {
-      return "Chợ Bến Thành được xây dựng từ năm 1859 và hoàn thành vào năm 1912. Đây là một trong những công trình kiến trúc Đông Dương nổi tiếng nhất của Sài Gòn."
-    } else if (message.includes('giờ') || message.includes('time') || message.includes('mở cửa')) {
-      return "Chợ Bến Thành mở cửa từ 6:00 sáng đến 18:00 chiều hàng ngày. Chợ đêm hoạt động từ 18:00 đến 23:00."
-    } else if (message.includes('mua') || message.includes('shopping') || message.includes('gì')) {
-      return "Tại chợ Bến Thành, bạn có thể mua đồ ăn, quần áo, đồ lưu niệm, thủ công mỹ nghệ và nhiều sản phẩm đặc trưng của Việt Nam."
-    } else if (message.includes('đường') || message.includes('address') || message.includes('ở đâu')) {
-      return "Chợ Bến Thành tọa lạc tại ngã tư Lê Lợi - Phan Bội Châu - Lê Thánh Tôn - Phan Chu Trinh, Quận 1, TP.HCM."
+    if (message.includes('lịch sử') || message.includes('history') || message.includes('nguồn gốc')) {
+      return "Rối nước là nghệ thuật biểu diễn dân gian truyền thống của Việt Nam, xuất hiện từ thế kỷ 11-12. Nghệ thuật này phát triển mạnh ở miền Bắc, đặc biệt là vùng đồng bằng sông Hồng với các làng nghề như Đào Thục (Nam Định)."
+    } else if (message.includes('kỹ thuật') || message.includes('biểu diễn') || message.includes('làm sao')) {
+      return "Rối nước được biểu diễn trên mặt nước, các nghệ nhân đứng trong nước điều khiển con rối bằng cần tre dài. Mặt nước vừa là sân khấu vừa che giấu bí mật của nghệ thuật này. Các con rối được làm từ gỗ sung, tô vẽ sặc sỡ."
+    } else if (message.includes('câu chuyện') || message.includes('nội dung') || message.includes('kịch bản')) {
+      return "Các vở rối nước thường kể về đời sống nông nghiệp, lịch sử anh hùng dân tộc như Thánh Gióng, Lê Lợi, hay những câu chuyện dân gian như Tấm Cám, cảnh sinh hoạt làng quê với múa rồng, lội nước, câu cá..."
+    } else if (message.includes('ở đâu') || message.includes('xem') || message.includes('địa điểm')) {
+      return "Bạn có thể xem rối nước tại Nhà hát Rối nước Thăng Long (Hà Nội), Bảo tàng Dân tộc học Việt Nam, các làng nghề truyền thống như Đào Thục (Nam Định), hoặc trong các lễ hội văn hóa."
+    } else if (message.includes('nhạc cụ') || message.includes('âm nhạc') || message.includes('dàn nhạc')) {
+      return "Rối nước được đệm bằng dàn nhạc cổ truyền gồm trống, chiêng, kèn bầu, đàn nguyệt, sáo trúc... Các nghệ nhân vừa điều khiển rối vừa hát chèo, tạo nên bầu không khí sôi động."
     } else if (message.includes('cảm ơn') || message.includes('thank')) {
-      return "Rất vui được giúp bạn! Chúc bạn có chuyến thăm quan Chợ Bến Thành thú vị! 😊"
+      return "Rất vui được giúp bạn tìm hiểu về nghệ thuật rối nước Việt Nam! Chúc bạn có những trải nghiệm thú vị với di sản văn hóa truyền thống này! 🎭"
     } else {
-      return "Tôi hiểu bạn muốn biết thêm về Chợ Bến Thành. Bạn có thể hỏi tôi về lịch sử, giờ mở cửa, sản phẩm bán tại chợ, hoặc địa chỉ nhé!"
+      return "Tôi hiểu bạn muốn biết thêm về nghệ thuật rối nước Việt Nam. Bạn có thể hỏi tôi về lịch sử, kỹ thuật biểu diễn, nội dung các vở diễn, địa điểm xem hoặc nhạc cụ đệm nhé!"
     }
   }
 
@@ -138,7 +140,7 @@ const ChatBot = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 2 }}
           >
-            Xin chào! Cần hỗ trợ gì không?
+            Xin chào! Muốn tìm hiểu về rối nước không?
           </motion.div>
         )}
       </motion.div>
@@ -169,7 +171,7 @@ const ChatBot = () => {
                   </video>
                 </div>
                 <div className="header-text">
-                  <h3>Trợ lý Chợ Bến Thành</h3>
+                  <h3>Trợ lý Rối nước Việt Nam</h3>
                   <span className="status">🟢 Đang hoạt động</span>
                 </div>
               </div>

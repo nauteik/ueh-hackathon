@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Navigation, HeroSection, AboutSection, ForumSection, BookingSection } from './components'
 import Game from './components/Game/Game'
+import ChatBot from './components/ChatBot'
 import './App.css'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
     <div className="min-h-screen w-full bg-[#0B4B3A] overflow-x-hidden">
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       {renderSection()}
+      <ChatBot />
     </div>
   )
 }
